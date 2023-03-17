@@ -31,7 +31,7 @@ javafx {
 }
 
 application {
-    mainClassName = 'edu.vanier.physicsimulations.Main'
+    mainClassName = 'edu.vanier.physicsimulations.views.MainApp'
 }
 
 test {
