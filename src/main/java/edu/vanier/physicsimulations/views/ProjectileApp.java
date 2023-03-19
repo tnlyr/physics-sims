@@ -11,8 +11,9 @@ import javafx.stage.Stage;
 public class ProjectileApp extends Stage {
 
     public ProjectileApp() {
-        this.setTitle("Projectile Simulation");
+        this.setTitle("Projectile Motion Simulation");
         this.initModality(Modality.APPLICATION_MODAL);
+        this.setResizable(false);
         try {
             start();
         } catch (Exception e) {
