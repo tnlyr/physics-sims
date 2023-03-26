@@ -1,4 +1,5 @@
 package edu.vanier.physicsimulations.engines;
+import java.lang.Math;
 
 public class OpticsEngine {
     private double sourcePos, sourceHeight;
@@ -11,6 +12,7 @@ public class OpticsEngine {
     public OpticsEngine(double sourcePos, double sourceHeight, double objectPos, double objectHeight, double imagePos, double imageHeight, double focalLength) {
 
     }
+
 
     public void update(double time) {
 
@@ -95,4 +97,12 @@ public class OpticsEngine {
     public void setObjectDistanceToImageDistanceRatio(double objectDistanceToImageDistanceRatio) {
         this.objectDistanceToImageDistanceRatio = objectDistanceToImageDistanceRatio;
     }
+
+    public double lensEquation(double objectDistance,double focalLength){
+       double image = 1/focalLength - 1/objectDistance;
+       double exposant = -1;
+      imageDistance= Math.pow(image,exposant);
+        return imageDistance;
+    }
+
 }
