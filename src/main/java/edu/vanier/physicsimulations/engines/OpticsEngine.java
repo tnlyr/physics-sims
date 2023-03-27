@@ -1,76 +1,26 @@
 package edu.vanier.physicsimulations.engines;
 import java.lang.Math;
+import java.util.Objects;
 
 public class OpticsEngine {
-    private double sourcePos, sourceHeight;
-    private double objectPos, objectHeight;
-    private double imagePos, imageHeight;
+    private double objectDistance;
+    private double objectHeight;
+    private String lensType;
     private double focalLength;
-    private double objectDistance, imageDistance;
-    private double objectDistanceToImageDistanceRatio;
 
-    public OpticsEngine(double sourcePos, double sourceHeight, double objectPos, double objectHeight, double imagePos, double imageHeight, double focalLength) {
-
+    public OpticsEngine() {
     }
 
-
-    public void update(double time) {
-
-    }
-
-    public double getSourcePos() {
-        return sourcePos;
-    }
-
-    public void setSourcePos(double sourcePos) {
-        this.sourcePos = sourcePos;
-    }
-
-    public double getSourceHeight() {
-        return sourceHeight;
-    }
-
-    public void setSourceHeight(double sourceHeight) {
-        this.sourceHeight = sourceHeight;
-    }
-
-    public double getObjectPos() {
-        return objectPos;
-    }
-
-    public void setObjectPos(double objectPos) {
-        this.objectPos = objectPos;
-    }
-
-    public double getObjectHeight() {
-        return objectHeight;
-    }
-
-    public void setObjectHeight(double objectHeight) {
+    public OpticsEngine(double objectDistance, double objectHeight, String lensType, double focalLength) {
+        this.objectDistance = objectDistance;
         this.objectHeight = objectHeight;
+        this.lensType = lensType;
+        this.focalLength = focalLength;
     }
 
-    public double getImagePos() {
-        return imagePos;
-    }
-
-    public void setImagePos(double imagePos) {
-        this.imagePos = imagePos;
-    }
-
-    public double getImageHeight() {
-        return imageHeight;
-    }
-
-    public void setImageHeight(double imageHeight) {
-        this.imageHeight = imageHeight;
-    }
-
-    public double getFocalLength() {
-        return focalLength;
-    }
-
-    public void setFocalLength(double focalLength) {
+    public OpticsEngine(double objectDistance, String lensType, double focalLength) {
+        this.objectDistance = objectDistance;
+        this.lensType = lensType;
         this.focalLength = focalLength;
     }
 
@@ -82,27 +32,50 @@ public class OpticsEngine {
         this.objectDistance = objectDistance;
     }
 
-    public double getImageDistance() {
-        return imageDistance;
+    public double getObjectHeight() {
+        return objectHeight;
     }
 
-    public void setImageDistance(double imageDistance) {
-        this.imageDistance = imageDistance;
+    public void setObjectHeight(double objectHeight) {
+        this.objectHeight = objectHeight;
     }
 
-    public double getObjectDistanceToImageDistanceRatio() {
-        return objectDistanceToImageDistanceRatio;
+    public String getLensType() {
+        return lensType;
     }
 
-    public void setObjectDistanceToImageDistanceRatio(double objectDistanceToImageDistanceRatio) {
-        this.objectDistanceToImageDistanceRatio = objectDistanceToImageDistanceRatio;
+    public void setLensType(String lensType) {
+        this.lensType = lensType;
     }
 
-    public double lensEquation(double objectDistance,double focalLength){
-       double image = 1/focalLength - 1/objectDistance;
-       double exposant = -1;
-      imageDistance= Math.pow(image,exposant);
-        return imageDistance;
+    public double getFocalLength() {
+        return focalLength;
     }
 
+    public void setFocalLength(double focalLength) {
+        this.focalLength = focalLength;
+    }
+
+
+    public double lensEquation(double objectDistance, double focalLength, String lensType) {
+        if (Objects.equals(lensType, "Divergent")) {
+
+            double image = 1 / (-1 * focalLength) - 1 / objectDistance;
+            double exposant = -1;
+            double imageDistance = Math.pow(image, exposant);
+            return imageDistance;
+        } else {
+            double image = 1 / focalLength - 1 / objectDistance;
+            double exposant = -1;
+            double imageDistance = Math.pow(image, exposant);
+            return imageDistance;
+        }
+
+    }
+
+    public double heightRatio(double objectDistance, double focalLength, String lensType) {
+        double magnification = (-1*lensEquation(objectDistance, focalLength, lensType)) / getObjectDistance();
+        return magnification;
+    }
 }
+
