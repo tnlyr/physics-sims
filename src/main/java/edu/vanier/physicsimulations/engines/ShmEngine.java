@@ -6,6 +6,8 @@ public class ShmEngine {
     private double initialAngle, length, mass, gravity;
     private double period, kineticEnergy, potentialEnergy, totalEnergy, velocity, acceleration;
 
+    private double height;
+
     private static final double pi = Math.PI;
 
     public ShmEngine() {
@@ -89,5 +91,13 @@ public class ShmEngine {
 
     public void setAcceleration(double acceleration) {
         this.acceleration = acceleration;
+    }
+
+    public double getHeight() {
+        return height;
+    }
+
+    public void setHeight(double height) {
+        this.height = height;
     }
 }
