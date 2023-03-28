@@ -8,7 +8,7 @@ public class ShmEngine {
 
     private double height;
 
-    private static final double pi = Math.PI;
+
 
     public ShmEngine() {
     }
@@ -49,8 +49,8 @@ public class ShmEngine {
         return period;
     }
 
-    public void setPeriod(double period) {
-        this.period = period;
+    public void setPeriod(double length, double gravity) {
+        this.period = 2 * Math.PI * Math.sqrt(length/gravity);
     }
 
     public double getKineticEnergy() {
