@@ -9,8 +9,11 @@ public class ShmEngine {
     private double height;
 
 
-
-    public ShmEngine() {
+    public ShmEngine(double initialAngle, double length, double mass, double gravity) {
+        this.initialAngle = initialAngle;
+        this.length = length;
+        this.mass = mass;
+        this.gravity = gravity;
     }
 
     public double getInitialAngle() {
@@ -49,8 +52,8 @@ public class ShmEngine {
         return period;
     }
 
-    public void setPeriod(double length, double gravity) {
-        this.period = 2 * Math.PI * Math.sqrt(length/gravity);
+    public void setPeriod() {
+        this.period = 2 * Math.PI * Math.sqrt(this.length/this.gravity);
     }
 
     public double getKineticEnergy() {
@@ -65,16 +68,16 @@ public class ShmEngine {
         return potentialEnergy;
     }
 
-    public void setPotentialEnergy(double potentialEnergy) {
-        this.potentialEnergy = potentialEnergy;
+    public void setPotentialEnergy() {
+        this.potentialEnergy = this.height * this.gravity * this.mass;
     }
 
     public double getTotalEnergy() {
         return totalEnergy;
     }
 
-    public void setTotalEnergy(double totalEnergy) {
-        this.totalEnergy = totalEnergy;
+    public void setTotalEnergy() {
+        this.totalEnergy = this.mass * this.gravity * this.height;
     }
 
     public double getVelocity() {
@@ -97,7 +100,7 @@ public class ShmEngine {
         return height;
     }
 
-    public void setHeight(double height) {
-        this.height = height;
+    public void setHeight() {
+        this.height = this.length - (this.length * Math.cos(this.initialAngle));
     }
 }
