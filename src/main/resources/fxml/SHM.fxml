@@ -36,7 +36,7 @@
             <HBox prefHeight="100.0" prefWidth="200.0" spacing="10.0">
                <children>
                   <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Length(m)" />
-                  <Spinner fx:id="lengthSpinner" prefHeight="24.0" prefWidth="76.0" />
+                  <Spinner fx:id="lengthSpinner" prefHeight="24.0" prefWidth="76.0" editable="true" />
                </children>
             </HBox>
             <HBox prefHeight="100.0" prefWidth="200.0" spacing="10.0">
@@ -46,7 +46,7 @@
                         <Insets />
                      </HBox.margin>
                   </Text>
-                  <Spinner fx:id="angleSpinner" prefHeight="24.0" prefWidth="76.0" />
+                  <Spinner fx:id="angleSpinner" prefHeight="24.0" prefWidth="76.0" editable="true" />
                </children>
                <HBox.margin>
                   <Insets left="125.0" />
@@ -59,7 +59,7 @@
                         <Insets />
                      </HBox.margin>
                   </Text>
-                  <Spinner fx:id="massSpinner" prefHeight="24.0" prefWidth="76.0" />
+                  <Spinner fx:id="massSpinner" prefHeight="24.0" prefWidth="76.0" editable="true" />
                </children>
                <HBox.margin>
                   <Insets left="125.0" />
@@ -88,7 +88,7 @@
                         <Insets />
                      </HBox.margin>
                   </Text>
-                  <Spinner fx:id="gravitySpinner" prefHeight="24.0" prefWidth="76.0" />
+                  <Spinner fx:id="gravitySpinner" prefHeight="24.0" prefWidth="76.0" editable="true" />
                </children>
                <HBox.margin>
                   <Insets left="95.0" />
