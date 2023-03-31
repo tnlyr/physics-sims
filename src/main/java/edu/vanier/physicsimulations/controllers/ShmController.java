@@ -1,14 +1,22 @@
 package edu.vanier.physicsimulations.controllers;
 
+import java.io.IOException;
+import javafx.application.Application;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.Slider;
 import javafx.scene.control.Spinner;
+import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
 
-public class ShmController {
+import java.net.URL;
+import java.util.ResourceBundle;
+
+public  class ShmController {
 
     @FXML
     private Spinner lengthSpinner;
@@ -29,14 +37,35 @@ public class ShmController {
     @FXML
     private Button playBtn;
     @FXML
-    private Button resetBtn;
+    Button resetBtn;
 
+
+
+
+
+    @FXML
+     void initialize() {
+
+        rectangle.setFill(Color.BEIGE);
+
+
+
+
+
+        /*
+        angleSpinner.setOnMousePressed ((event) -> {
+            double angle = (double) angleSpinner.getValue();
+            string.setRotate(angle);
+            string.setTranslateX(45);
+            System.out.println("sewy");
+
+        });;
+        */
+}
 
     public ShmController() {
-
-
+        initialize();
     }
 
-    private void initialize() {
-    }
+
 }
