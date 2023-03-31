@@ -63,7 +63,7 @@
                 <Separator blendMode="MULTIPLY" orientation="VERTICAL" />
                 <HBox alignment="CENTER" spacing="30.0">
                     <children>
-                        <Text fill="#00000070" stroke="BLACK" strokeType="OUTSIDE" strokeWidth="0.0" text="Focal Length" textAlignment="CENTER">
+                        <Text fill="#00000070" stroke="BLACK" strokeType="OUTSIDE" strokeWidth="0.0" text="Object Height" textAlignment="CENTER">
                             <font>
                                 <Font name="System Bold" size="14.0" />
                             </font>
@@ -75,13 +75,13 @@
                                         <Insets />
                                     </HBox.margin>
                                 </Text>
-                                <Spinner fx:id="focalLength" editable="true" prefWidth="70.0" />
+                                <Spinner fx:id="objectHeightY" editable="true" prefWidth="70.0" />
                             </children>
                         </HBox>
                         <HBox alignment="CENTER" spacing="10.0">
                             <children>
                                 <Separator blendMode="MULTIPLY" orientation="VERTICAL" />
-                                <Text fill="#00000070" stroke="BLACK" strokeType="OUTSIDE" strokeWidth="0.0" text="Object Height" textAlignment="CENTER">
+                                <Text fill="#00000070" stroke="BLACK" strokeType="OUTSIDE" strokeWidth="0.0" text="Focal Length" textAlignment="CENTER">
                                     <font>
                                         <Font name="System Bold" size="14.0" />
                                     </font>
@@ -128,8 +128,8 @@
                         </HBox>
                         <HBox alignment="CENTER" spacing="10.0">
                             <children>
-                                <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Object Height" />
-                                <Text fx:id="objectHeight" strokeType="OUTSIDE" strokeWidth="0.0" text="0 " />
+                                <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Focal Length" />
+                                <Text fx:id="focalLength" strokeType="OUTSIDE" strokeWidth="0.0" text="0 " />
                             </children>
                         </HBox>
                         <HBox alignment="CENTER" spacing="10.0">
