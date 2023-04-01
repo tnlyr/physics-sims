@@ -2,8 +2,10 @@ package edu.vanier.physicsimulations.views;
 
 import edu.vanier.physicsimulations.controllers.ShmController;
 
+import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
@@ -22,7 +24,8 @@ public class ShmApp extends Stage {
     public void start() throws Exception {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/SHM.fxml"));
         loader.setController(new ShmController());
-        this.setScene(new Scene(loader.load()));
+        VBox root = loader.load();
+        this.setScene(new Scene(root));
         this.sizeToScene();
         this.show();
     }
