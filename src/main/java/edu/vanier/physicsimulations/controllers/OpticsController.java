@@ -13,6 +13,9 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Spinner;
 import javafx.scene.control.SpinnerValueFactory;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Ellipse;
 import javafx.scene.shape.Line;
@@ -47,8 +50,12 @@ public class OpticsController implements Initializable {
     @FXML
     Button playBtn;
 
+    @FXML
+    Pane opticsContainer;
+
     double currentValueX;
     double currentValueY;
+    int counter =1;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -65,6 +72,7 @@ public class OpticsController implements Initializable {
                 object.setX(currentValueX);
             }
         });
+
         SpinnerValueFactory<Double> valueFactoryY = new SpinnerValueFactory.DoubleSpinnerValueFactory(1,108);
         valueFactoryY.setValue(108.00);
         objectHeightY.setValueFactory(valueFactoryY);
@@ -73,8 +81,19 @@ public class OpticsController implements Initializable {
         objectHeightY.valueProperty().addListener(new ChangeListener<Double>(){
             @Override
             public void changed(ObservableValue<? extends Double> observable, Double oldValue, Double newValue) {
+                double previousValueY = object.getHeight();
                 currentValueY = objectHeightY.getValue();
                 object.setHeight(currentValueY);
+                if (currentValueY>previousValueY){
+                    object.setY(object.getY()-object.getHeight()/(95-0.8*counter));
+                    counter++;
+                }
+                else {
+                    counter =1;
+                    object.setY(object.getY()+object.getHeight()/(95-0.8*counter));
+                    counter++;
+                }
+
             }
         });
 
@@ -83,10 +102,29 @@ public class OpticsController implements Initializable {
 
         playBtn.setOnAction(e ->{
             Line lineR1 = new Line();
-            lineR1.setStartX(object.getX());
-            lineR1.setStartY(object.getY());
-            lineR1.setEndX(lens.getCenterX());
-            lineR1.setStartX(lens.getRadiusY()*2);
+            Line lineR2 = new Line();
+            Line lineR3 = new Line();
+
+            lineR1.setStartX(object.getLayoutX()+object.getX());
+            lineR1.setStartY(object.getLayoutY()+object.getY());
+            lineR2.setStartX(object.getLayoutX()+object.getX());
+            lineR2.setStartY(object.getLayoutY()+object.getY());
+            lineR3.setStartX(object.getLayoutX()+object.getX());
+            lineR3.setStartY(object.getLayoutY()+object.getY());
+
+            lineR1.setEndX(lens.getLayoutX());
+            lineR1.setEndY(lens.getLayoutY()-lens.getRadiusY());
+            lineR1.setStroke(Color.BLUE);
+            lineR2.setEndX(lens.getLayoutX());
+            lineR2.setEndY(lens.getLayoutY()+lens.getRadiusY());
+            lineR2.setStroke(Color.RED);
+            lineR3.setEndX(lens.getLayoutX());
+            lineR3.setEndY(lens.getLayoutY());
+            lineR3.setStroke(Color.GREEN);
+            opticsContainer.getChildren().add(lineR1);
+            opticsContainer.getChildren().add(lineR2);
+            opticsContainer.getChildren().add(lineR3);
+
 
 
         });
@@ -94,8 +132,9 @@ public class OpticsController implements Initializable {
     }
 
     public void getLenses(ActionEvent event){
+
         String lenses = lensTypeDrag.getValue();
-        if(lenses == "Convergent"){
+        if(lenses.equals("Convergent")){
             lens.setFill(Color.RED);
             lens.setRadiusX(9);
 
