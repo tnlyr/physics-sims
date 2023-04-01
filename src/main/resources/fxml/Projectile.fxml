@@ -12,7 +12,6 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Text?>
 
-
 <VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="709.0" prefWidth="1039.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <MenuBar>
@@ -97,7 +96,7 @@
             <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
          </padding>
       </HBox>
-      <Pane prefHeight="554.0" prefWidth="1039.0" />
+      <Pane fx:id="projectilePane" prefHeight="554.0" prefWidth="1039.0" />
       <HBox prefHeight="26.0" prefWidth="1039.0" style="-fx-border-color: #cccccc;">
          <children>
             <HBox prefHeight="100.0" prefWidth="200.0" spacing="30.0">
@@ -133,9 +132,9 @@
                   <Insets left="300.0" />
                </HBox.margin>
                <children>
-                  <Button mnemonicParsing="false" prefWidth="70.0" text="Play" textFill="#50c878" />
-                  <Button layoutX="84.0" layoutY="16.0" mnemonicParsing="false" prefWidth="70.0" text="Stop" textFill="#ff5733" />
-                  <Button layoutX="120.0" layoutY="16.0" mnemonicParsing="false" prefWidth="70.0" text="Graph It!" textFill="#5d8aa8" />
+                  <Button fx:id="playBtn" mnemonicParsing="false" prefWidth="70.0" text="Play" textFill="#50c878" />
+                  <Button fx:id="resetBtn" layoutX="84.0" layoutY="16.0" mnemonicParsing="false" prefWidth="70.0" text="Reset" textFill="#ff5733" />
+                  <Button fx:id="graphBtn" layoutX="120.0" layoutY="16.0" mnemonicParsing="false" prefWidth="70.0" text="Graph It!" textFill="#5d8aa8" />
                </children>
             </HBox>
          </children>
