@@ -1,19 +1,75 @@
 package edu.vanier.physicsimulations.engines;
 
+import javafx.animation.AnimationTimer;
+import javafx.scene.canvas.Canvas;
+
 public class ProjectileMotionEngine {
+    private static ProjectileMotionEngine instance;
     private double initialPosX, initialPosY;
     private double currentPosX, currentPosY;
+    private double nextPosX, nextPosY;
     private double initialVelocityX, initialVelocityY;
     private double currentVelocityX, currentVelocityY;
+    private double angle;
+    private double gravity;
 
-    public ProjectileMotionEngine(double initialPosX, double initialPosY, double initialVelocityX, double initialVelocityY) {
-        this.initialPosX = initialPosX;
-        this.initialPosY = initialPosY;
-        this.initialVelocityX = initialVelocityX;
-        this.initialVelocityY = initialVelocityY;
+    public double getGravity() {
+        return gravity;
+    }
+
+    public void setGravity(double gravity) {
+        this.gravity = gravity;
+    }
+
+    public static void setInstance(ProjectileMotionEngine instance) {
+        ProjectileMotionEngine.instance = instance;
+    }
+
+    public double getNextPosX() {
+        return nextPosX;
+    }
+
+    public void setNextPosX(double nextPosX) {
+        this.nextPosX = nextPosX;
+    }
+
+    public double getNextPosY() {
+        return nextPosY;
+    }
+
+    public void setNextPosY(double nextPosY) {
+        this.nextPosY = nextPosY;
+    }
+
+    public double getAngle() {
+        return angle;
+    }
+
+    public void setAngle(double angle) {
+        this.angle = angle;
+    }
+
+    public double getTime() {
+        return time;
+    }
+
+    public void setTime(double time) {
+        this.time = time;
+    }
+
+    private double time;
+
+    private void animationSettings() {
     }
 
     public void update(double time) {
+    }
+
+    public static ProjectileMotionEngine getInstance() {
+        if (instance == null) {
+            instance = new ProjectileMotionEngine();
+        }
+        return instance;
     }
 
     public double getInitialPosX() {
