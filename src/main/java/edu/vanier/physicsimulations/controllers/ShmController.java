@@ -1,15 +1,15 @@
 package edu.vanier.physicsimulations.controllers;
 
+import javafx.animation.*;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.Slider;
 import javafx.scene.control.Spinner;
 import javafx.scene.control.SpinnerValueFactory;
-import javafx.scene.shape.Circle;
-import javafx.scene.shape.Line;
-import javafx.scene.shape.Rectangle;
+import javafx.scene.shape.*;
 import javafx.scene.transform.Rotate;
+import javafx.util.Duration;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -54,17 +54,38 @@ public class ShmController implements Initializable {
         valueFactory.setValue((double)1);
 
         angleSpinner.setValueFactory(valueFactory);
-        AtomicInteger counter = new AtomicInteger();
+
+
+    playBtn.setOnAction((event -> {
+        double angle = angleSpinner.getValue();
+
+        Rotate rotate = new Rotate();
+
+        rotate.setPivotX(string.getStartX());
+        rotate.setPivotY(string.getStartY());
+
+        rotate.setAngle(angle);
+        string.getTransforms().add(rotate);
+
+        Timeline timeline = new Timeline();
+
+        KeyValue keyValue = new KeyValue(rotate.angleProperty(), -90, Interpolator.EASE_BOTH);
+
+        KeyFrame keyFrame = new KeyFrame(Duration.seconds(1.0), keyValue);
+
+    timeline.setCycleCount(Timeline.INDEFINITE);
+    timeline.setAutoReverse(true);
+
+        timeline.play();
+
+
+    }));
 
 
 
-        playBtn.setOnAction((event -> {
-            System.out.println(angleSpinner.getValue());
-        }));
-
-
+/*
         angleSpinner.setOnMouseClicked ((event) -> {
-            double angle = (double) angleSpinner.getValue();
+            double angle = angleSpinner.getValue();
 
             Rotate rotate = new Rotate();
 
@@ -72,26 +93,19 @@ public class ShmController implements Initializable {
             rotate.setPivotY(string.getStartY());
 
             rotate.setAngle(angle);
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
             string.getTransforms().add(rotate);
+
+
         });
 
         angleSpinner.setOnMouseReleased((event -> {
-            Rotate rotate = new Rotate();
+
         }));
+*/
+
+
+
+
+
     }
 }
