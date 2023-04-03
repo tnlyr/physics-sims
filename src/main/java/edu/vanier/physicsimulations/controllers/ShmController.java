@@ -1,6 +1,8 @@
 package edu.vanier.physicsimulations.controllers;
 
 import javafx.animation.*;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
@@ -57,24 +59,32 @@ public class ShmController implements Initializable {
 
 
     playBtn.setOnAction((event -> {
-        double angle = angleSpinner.getValue();
+        double angleret = angleSpinner.getValue();
 
         Rotate rotate = new Rotate();
 
         rotate.setPivotX(string.getStartX());
         rotate.setPivotY(string.getStartY());
 
-        rotate.setAngle(angle);
+
         string.getTransforms().add(rotate);
 
         Timeline timeline = new Timeline();
 
-        KeyValue keyValue = new KeyValue(rotate.angleProperty(), -90, Interpolator.EASE_BOTH);
+        timeline.setCycleCount(Timeline.INDEFINITE);
 
-        KeyFrame keyFrame = new KeyFrame(Duration.seconds(1.0), keyValue);
 
-    timeline.setCycleCount(Timeline.INDEFINITE);
-    timeline.setAutoReverse(true);
+
+        KeyFrame keyFrame = new KeyFrame(Duration.seconds(0.1), new EventHandler<ActionEvent>() {
+            double angle =0;
+            @Override
+            public void handle(ActionEvent event) {
+                angle += 1;
+                rotate.setAngle(angle);
+            }
+        });
+
+        timeline.getKeyFrames().add(keyFrame);
 
         timeline.play();
 
