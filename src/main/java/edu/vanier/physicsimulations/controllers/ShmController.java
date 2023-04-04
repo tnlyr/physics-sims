@@ -59,23 +59,26 @@ public class ShmController implements Initializable {
 
 
     playBtn.setOnAction((event -> {
-        double angleret = angleSpinner.getValue();
+        double angler = angleSpinner.getValue();
 
         Rotate rotate = new Rotate();
 
         rotate.setPivotX(string.getStartX());
         rotate.setPivotY(string.getStartY());
 
+        rotate.setAngle(-angler);
+
 
         string.getTransforms().add(rotate);
 
         Timeline timeline = new Timeline();
 
-        timeline.setCycleCount(Timeline.INDEFINITE);
+        timeline.setCycleCount((int)(angler*2));
+        timeline.setAutoReverse(true);
 
 
 
-        KeyFrame keyFrame = new KeyFrame(Duration.seconds(0.1), new EventHandler<ActionEvent>() {
+        KeyFrame keyFrame = new KeyFrame(Duration.millis(100), new EventHandler<ActionEvent>() {
             double angle =0;
             @Override
             public void handle(ActionEvent event) {
@@ -84,7 +87,7 @@ public class ShmController implements Initializable {
             }
         });
 
-        timeline.getKeyFrames().add(keyFrame);
+        timeline.getKeyFrames().addAll(keyFrame);
 
         timeline.play();
 
@@ -93,25 +96,48 @@ public class ShmController implements Initializable {
 
 
 
-/*
-        angleSpinner.setOnMouseClicked ((event) -> {
+
+     /*   angleSpinner.setOnMouseClicked ((event) -> {
             double angle = angleSpinner.getValue();
 
             Rotate rotate = new Rotate();
+            Rotate rotate1 = new Rotate();
+
 
             rotate.setPivotX(string.getStartX());
             rotate.setPivotY(string.getStartY());
 
+            rotate1.setPivotX(string.getStartX());
+            rotate1.setPivotY(string.getStartY());
+
             rotate.setAngle(angle);
             string.getTransforms().add(rotate);
+
+            Timeline timeline = new Timeline();
+            Timeline timeline1 = new Timeline();
+
+            timeline.setCycleCount(1);
+
+
+
+            KeyFrame keyFrame = new KeyFrame(Duration.millis(1), new EventHandler<ActionEvent>() {
+                double angle = 0;
+                @Override
+                public void handle(ActionEvent event) {
+                    angle += 1;
+                    rotate.setAngle(angle);
+                }
+            });
+
+            timeline.getKeyFrames().add(keyFrame);
+
+           // timeline.play();
 
 
         });
 
-        angleSpinner.setOnMouseReleased((event -> {
-
-        }));
 */
+
 
 
 
