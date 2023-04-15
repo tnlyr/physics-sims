@@ -87,7 +87,7 @@
                                     </font>
                                 </Text>
                                 <Text strokeType="OUTSIDE" strokeWidth="0.0" text=" Meter:" />
-                                <Spinner fx:id="objectHeight" editable="true" prefWidth="70.0" />
+                                <Spinner fx:id="focalLength" editable="true" prefWidth="70.0" />
                                 <Separator orientation="VERTICAL" prefHeight="0.0" prefWidth="5.0" />
                                 <Text focusTraversable="true" lineSpacing="20.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Lens Type:" textAlignment="CENTER">
                                     <HBox.margin>
@@ -129,7 +129,7 @@
                         <HBox alignment="CENTER" spacing="10.0">
                             <children>
                                 <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Focal Length" />
-                                <Text fx:id="focalLength" strokeType="OUTSIDE" strokeWidth="0.0" text="0 " />
+                                <Text fx:id="focalLengthIndice" strokeType="OUTSIDE" strokeWidth="0.0" text="0 " />
                             </children>
                         </HBox>
                         <HBox alignment="CENTER" spacing="10.0">

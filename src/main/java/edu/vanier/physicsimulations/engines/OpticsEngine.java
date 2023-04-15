@@ -3,7 +3,7 @@ import java.lang.Math;
 import java.util.Objects;
 
 public class OpticsEngine {
-    private double objectDistance;
+    private static double objectDistance;
     private double objectHeight;
     private String lensType;
     private double focalLength;
@@ -24,7 +24,7 @@ public class OpticsEngine {
         this.focalLength = focalLength;
     }
 
-    public double getObjectDistance() {
+    public static double getObjectDistance() {
         return objectDistance;
     }
 
@@ -57,12 +57,12 @@ public class OpticsEngine {
     }
 
 
-    public double lensEquation(double objectDistance, double focalLength, String lensType) {
+    public static double lensEquation(double objectDistance, double focalLength, String lensType) {
         if (Objects.equals(lensType, "Divergent")) {
 
             double image = 1 / (-1 * focalLength) - 1 / objectDistance;
-            double exposant = -1;
-            double imageDistance = Math.pow(image, exposant);
+            double exponent = -1;
+            double imageDistance = Math.pow(image, exponent);
             return imageDistance;
         } else {
             double image = 1 / focalLength - 1 / objectDistance;
@@ -73,7 +73,7 @@ public class OpticsEngine {
 
     }
 
-    public double heightRatio(double objectDistance, double focalLength, String lensType) {
+    public static double  heightRatio(double objectDistance, double focalLength, String lensType) {
         double magnification = (-1*lensEquation(objectDistance, focalLength, lensType)) / getObjectDistance();
         return magnification;
     }
