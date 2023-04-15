@@ -1,4 +1,5 @@
 package edu.vanier.physicsimulations.controllers;
+
 import edu.vanier.physicsimulations.engines.OpticsEngine;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -14,6 +15,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Ellipse;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
+
 import java.net.URL;
 import java.util.ResourceBundle;
 
@@ -26,7 +28,7 @@ public class OpticsController implements Initializable {
     Spinner<Double> objectHeightY;
 
     @FXML
-   Spinner<Double> focalLength;
+    Spinner<Double> focalLength;
 
     @FXML
     Rectangle object;
@@ -111,6 +113,7 @@ public class OpticsController implements Initializable {
             Line lineR4 = new Line();
             Line lineR5 = new Line();
             Line lineR6 = new Line();
+            Line lineR7 = new Line();
             Rectangle rectangle = new Rectangle(15, 107, Color.BLACK);
             rectangle.setY(375);
             opticsContainer.getChildren().add(rectangle);
@@ -119,28 +122,28 @@ public class OpticsController implements Initializable {
             double x = OpticsEngine.lensEquation(valueFactoryX.getValue(), focalLength.getValue(), lensTypeDrag.getValue());
             System.out.println(x);
             System.out.println(rectangle.getTranslateX());
-            rectangle.setX(lens.getLayoutX() + (10*x));
+            rectangle.setX(lens.getLayoutX() + (10 * x));
 
-            Ellipse ellipse = new Ellipse();
-            ellipse.setCenterX(lens.getLayoutX() + 7*focalLength.getValue()); // Set center X coordinate
-            ellipse.setCenterY(375); // Set center Y coordinate
-            ellipse.setRadiusX(5); // Set horizontal radius
-            ellipse.setRadiusY(5); // Set vertical radius
-            ellipse.setFill(Color.YELLOW); // Set fill color
-            ellipse.setStroke(Color.BLACK); // Set stroke color
+            Ellipse focalLengthIndicator = new Ellipse();
+            focalLengthIndicator.setCenterX(lens.getLayoutX() + 7 * focalLength.getValue()); // Set center X coordinate
+            focalLengthIndicator.setCenterY(375); // Set center Y coordinate
+            focalLengthIndicator.setRadiusX(5); // Set horizontal radius
+            focalLengthIndicator.setRadiusY(5); // Set vertical radius
+            focalLengthIndicator.setFill(Color.YELLOW); // Set fill color
+            focalLengthIndicator.setStroke(Color.BLACK); // Set stroke color
 
-            opticsContainer.getChildren().add(ellipse);
+            opticsContainer.getChildren().add(focalLengthIndicator);
 
 
-            lineR1.setStartX(object.getLayoutX() + object.getX());
-            lineR1.setStartY(object.getLayoutY() + object.getY());
+            lineR1.setStartX(object.getLayoutX()+ object.getX());
+            lineR1.setStartY(object.getLayoutY());
             lineR2.setStartX(object.getLayoutX() + object.getX());
             lineR2.setStartY(object.getLayoutY() + object.getY());
             lineR3.setStartX(object.getLayoutX() + object.getX());
             lineR3.setStartY(object.getLayoutY() + object.getY());
 
             lineR1.setEndX(lens.getLayoutX());
-            lineR1.setEndY(lens.getLayoutY() - lens.getRadiusY());
+            lineR1.setEndY(lens.getLayoutY() - lens.getRadiusY() +12);
             lineR1.setStroke(Color.BLUE);
             lineR2.setEndX(lens.getLayoutX());
             lineR2.setEndY(lens.getLayoutY() + lens.getRadiusY());
@@ -150,7 +153,7 @@ public class OpticsController implements Initializable {
             lineR3.setStroke(Color.GREEN);
 
             lineR4.setStartX(lens.getLayoutX());
-            lineR4.setStartY(lens.getLayoutY() - lens.getRadiusY());
+            lineR4.setStartY(lens.getLayoutY() - lens.getRadiusY() +13);
             lineR4.setStroke(Color.BLUE);
             lineR5.setStartX(lens.getLayoutX());
             lineR5.setStartY(lens.getLayoutY() + lens.getRadiusY());
@@ -158,16 +161,20 @@ public class OpticsController implements Initializable {
             lineR6.setStartX(lens.getLayoutX());
             lineR6.setStartY(lens.getLayoutY());
             lineR6.setStroke(Color.GREEN);
+            //lineR7.setStartX(focalLengthIndicator.getCenterX());
+           // lineR7.setStartY(focalLengthIndicator.getCenterY());
+           // lineR7.setStroke(Color.BLUE);
 
             lineR4.setEndX(rectangle.getLayoutX() + rectangle.getX());
-            lineR4.setEndY(rectangle.getHeight()+ rectangle.getY());
+            lineR4.setEndY(rectangle.getHeight() + rectangle.getY());
+            //lineR4.setEndX(focalLengthIndicator.getCenterX());
+            //lineR4.setEndY(focalLengthIndicator.getCenterY());
             lineR5.setEndX(rectangle.getLayoutX() + rectangle.getX());
             lineR5.setEndY(rectangle.getHeight() + rectangle.getY());
             lineR6.setEndX(rectangle.getLayoutX() + rectangle.getX());
             lineR6.setEndY(rectangle.getHeight() + rectangle.getY());
-
-
-
+           // lineR7.setEndX(rectangle.getLayoutX() + rectangle.getX());
+           // lineR7.setEndY(rectangle.getHeight() + rectangle.getY());
 
             opticsContainer.getChildren().add(lineR1);
             opticsContainer.getChildren().add(lineR2);
@@ -175,6 +182,7 @@ public class OpticsController implements Initializable {
             opticsContainer.getChildren().add(lineR4);
             opticsContainer.getChildren().add(lineR5);
             opticsContainer.getChildren().add(lineR6);
+            opticsContainer.getChildren().add(lineR7);
 
 
         });
