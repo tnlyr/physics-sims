@@ -60,8 +60,17 @@ public class ProjectileMotionController implements Initializable {
         });
 
         angleSpinner.valueProperty().addListener((obs, oldValue, newValue) -> {
-            // TODO : UPDATE ANGLE
+            // update the angle in the engine
+            engine.setAngle(newValue.doubleValue());
+
+            // update the ball position based on the new angle
+            double x = engine.getCurrentVelocityX() * Math.cos(Math.toRadians(engine.getAngle())) * engine.getTime();
+            double y = engine.getCurrentVelocityY() * Math.sin(Math.toRadians(engine.getAngle())) * engine.getTime() -
+                    0.5 * engine.getGravity() * Math.pow(engine.getTime(), 2);
+            ball.setCenterX(x);
+            ball.setCenterY(engine.getInitialPosY() - y);
         });
+
 
         heightSpinner.valueProperty().addListener((obs, oldValue, newValue) -> {
             // TODO : UPDATE HEIGHT
@@ -74,6 +83,12 @@ public class ProjectileMotionController implements Initializable {
         playbackSlider.valueProperty().addListener((obs, oldValue, newValue) -> {
             // TODO : UPDATE PLAYBACK
         });
+
+        heightSpinner.valueProperty().addListener((obs, oldValue, newValue) -> {
+            double newHeight = newValue.doubleValue();
+            moveBallHeight(newHeight);
+        });
+
 
         playBtn.setOnAction(e -> {
             if (isPlaying) {
@@ -99,7 +114,7 @@ public class ProjectileMotionController implements Initializable {
         Timeline timeline = new Timeline();
         timeline.getKeyFrames().add(new KeyFrame(Duration.millis(16), e -> {
             double x = 20 * Math.cos(25) * time;
-            double y = 20 * Math.sin(25) * time - 0.5 * 9.8 * Math.pow(time, 2);
+            double y = 20 * Math.sin(25) * time - 0.5 * gravitySpinner.getValue() * Math.pow(time, 2);
 
             ball.setCenterX(x);
             ball.setCenterY(200 - y);
@@ -139,6 +154,7 @@ public class ProjectileMotionController implements Initializable {
         disableButtons(true);
         playBtn.setText("Pause");
         isPlaying = true;
+        System.out.println("Gravity: " + gravitySpinner.getValue());
         // FIXME : START ANIMATION
         animationTest();
     }
@@ -148,4 +164,85 @@ public class ProjectileMotionController implements Initializable {
     }
 
     private void initialize() {}
+
+    // TEST FUNCTIONS
+    private void animateProjectileThrown() {
+        double velocity = velocitySpinner.getValue();
+        double angle = angleSpinner.getValue();
+        double height = heightSpinner.getValue();
+        double gravity = gravitySpinner.getValue();
+
+        double initialVelocityX = velocity * Math.cos(Math.toRadians(angle));
+        double initialVelocityY = velocity * Math.sin(Math.toRadians(angle));
+
+        double totalTime = (2 * initialVelocityY) / gravity;
+        double maxDistance = initialVelocityX * totalTime;
+
+        ball = new Circle(10, Color.BLUE);
+        ball.setCenterX(0);
+        ball.setCenterY(400 - height);
+
+        ground = new Line(0, 400, maxDistance, 400);
+        projectilePane.getChildren().addAll(ball, ground);
+
+        Timeline timeline = new Timeline();
+        timeline.getKeyFrames().add(new KeyFrame(Duration.millis(16), e -> {
+            double time = timeline.getCurrentTime().toMillis() / 1000.0;
+
+            double x = initialVelocityX * time;
+            double y = initialVelocityY * time - 0.5 * gravity * Math.pow(time, 2);
+
+            ball.setCenterX(x);
+            ball.setCenterY(400 - height - y);
+
+            if (ball.getCenterY() >= 400) {
+                timeline.stop();
+            }
+        }));
+
+        timeline.setCycleCount(Timeline.INDEFINITE);
+        timeline.play();
+    }
+    private void animateProjectileDropped() {
+        double height = heightSpinner.getValue();
+        double gravity = gravitySpinner.getValue();
+
+        ball = new Circle(10, Color.BLUE);
+        ball.setCenterX(0);
+        ball.setCenterY(400 - height);
+
+        ground = new Line(0, 400, 800, 400);
+        projectilePane.getChildren().addAll(ball, ground);
+
+        Timeline timeline = new Timeline();
+        timeline.getKeyFrames().add(new KeyFrame(Duration.millis(16), e -> {
+            double time = timeline.getCurrentTime().toMillis() / 1000.0;
+
+            double x = 0;
+            double y = 0.5 * gravity * Math.pow(time, 2);
+
+            ball.setCenterX(x);
+            ball.setCenterY(400 - height - y);
+
+            if (ball.getCenterY() >= 400) {
+                timeline.stop();
+            }
+        }));
+
+        timeline.setCycleCount(Timeline.INDEFINITE);
+        timeline.play();
+    }
+    private void moveBallHeight(double height) {
+        double currentX = ball.getCenterX();
+        double currentY = 200 - ball.getCenterY() + height;
+        ball.setCenterY(200 - height);
+
+        // Adjusting gnd pos if ball is set blw gnd
+        if (ball.getCenterY() + ball.getRadius() >= ground.getStartY()) {
+            double groundAdjustment = ball.getCenterY() + ball.getRadius() - ground.getStartY() + 5;
+            ground.setStartY(ground.getStartY() + groundAdjustment);
+            ground.setEndY(ground.getEndY() + groundAdjustment);
+        }
+    }
+
 }
