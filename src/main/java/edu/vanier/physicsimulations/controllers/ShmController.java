@@ -40,6 +40,8 @@ public class ShmController implements Initializable {
     @FXML
     private Button resetBtn;
 
+    Timeline tl;
+
 
 
 
@@ -52,13 +54,22 @@ public class ShmController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
 
-        SpinnerValueFactory<Double> valueFactory = new SpinnerValueFactory.DoubleSpinnerValueFactory(1, 45);
+        SpinnerValueFactory<Double> valueFactory = new SpinnerValueFactory.DoubleSpinnerValueFactory(0, 90);
         valueFactory.setValue((double)1);
 
         angleSpinner.setValueFactory(valueFactory);
 
+        angleSpinner.valueProperty().addListener((observable, oldValue, newValue) -> {
+            rotateLineTo(newValue, oldValue);
+        });
+
+
+
+
 
     playBtn.setOnAction((event -> {
+
+        
         double angler = angleSpinner.getValue();
 
         Rotate rotate = new Rotate();
@@ -66,7 +77,7 @@ public class ShmController implements Initializable {
         rotate.setPivotX(string.getStartX());
         rotate.setPivotY(string.getStartY());
 
-        rotate.setAngle(-angler);
+        //rotate.setAngle(-angler);
 
 
         string.getTransforms().add(rotate);
@@ -78,7 +89,7 @@ public class ShmController implements Initializable {
 
 
 
-        KeyFrame keyFrame = new KeyFrame(Duration.millis(100), new EventHandler<ActionEvent>() {
+        KeyFrame keyFrame = new KeyFrame(Duration.millis(10), new EventHandler<ActionEvent>() {
             double angle =0;
             @Override
             public void handle(ActionEvent event) {
@@ -97,51 +108,26 @@ public class ShmController implements Initializable {
 
 
 
-     /*   angleSpinner.setOnMouseClicked ((event) -> {
-            double angle = angleSpinner.getValue();
-
-            Rotate rotate = new Rotate();
-            Rotate rotate1 = new Rotate();
-
-
-            rotate.setPivotX(string.getStartX());
-            rotate.setPivotY(string.getStartY());
-
-            rotate1.setPivotX(string.getStartX());
-            rotate1.setPivotY(string.getStartY());
-
-            rotate.setAngle(angle);
-            string.getTransforms().add(rotate);
-
-            Timeline timeline = new Timeline();
-            Timeline timeline1 = new Timeline();
-
-            timeline.setCycleCount(1);
-
-
-
-            KeyFrame keyFrame = new KeyFrame(Duration.millis(1), new EventHandler<ActionEvent>() {
-                double angle = 0;
-                @Override
-                public void handle(ActionEvent event) {
-                    angle += 1;
-                    rotate.setAngle(angle);
-                }
-            });
-
-            timeline.getKeyFrames().add(keyFrame);
-
-           // timeline.play();
-
-
-        });
-
-*/
-
-
-
 
 
 
     }
+
+
+    private void rotateLineTo(double newAngle,double oldAngle) {
+        //tl.stop();
+        Rotate rot = new Rotate();
+        rot.setPivotX(string.getStartX());
+        rot.setPivotY(string.getStartY());
+        rot.setAngle(-(newAngle-oldAngle));
+
+        string.getTransforms().add(rot);
+
+      }
+
+      private void animation() {
+
+      }
+
+
 }
