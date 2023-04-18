@@ -69,38 +69,10 @@ public class ShmController implements Initializable {
 
     playBtn.setOnAction((event -> {
 
-        
+
         double angler = angleSpinner.getValue();
 
-        Rotate rotate = new Rotate();
-
-        rotate.setPivotX(string.getStartX());
-        rotate.setPivotY(string.getStartY());
-
-        //rotate.setAngle(-angler);
-
-
-        string.getTransforms().add(rotate);
-
-        Timeline timeline = new Timeline();
-
-        timeline.setCycleCount((int)(angler*2));
-        timeline.setAutoReverse(true);
-
-
-
-        KeyFrame keyFrame = new KeyFrame(Duration.millis(10), new EventHandler<ActionEvent>() {
-            double angle =0;
-            @Override
-            public void handle(ActionEvent event) {
-                angle += 1;
-                rotate.setAngle(angle);
-            }
-        });
-
-        timeline.getKeyFrames().addAll(keyFrame);
-
-        timeline.play();
+        animation(angler);
 
 
     }));
@@ -125,7 +97,34 @@ public class ShmController implements Initializable {
 
       }
 
-      private void animation() {
+      private void animation(double angle) {
+
+          Rotate rotate = new Rotate();
+
+          rotate.setPivotX(string.getStartX());
+          rotate.setPivotY(string.getStartY());
+
+          string.getTransforms().add(rotate);
+
+          Timeline timeline = new Timeline();
+
+          timeline.setCycleCount((int)(angle*2));
+          //timeline.setAutoReverse(true);
+
+
+
+          KeyFrame keyFrame = new KeyFrame(Duration.millis(10), new EventHandler<ActionEvent>() {
+              double angle =0;
+              @Override
+              public void handle(ActionEvent event) {
+                  angle += 1;
+                  rotate.setAngle(angle);
+              }
+          });
+
+          timeline.getKeyFrames().addAll(keyFrame);
+
+          timeline.play();
 
       }
 
