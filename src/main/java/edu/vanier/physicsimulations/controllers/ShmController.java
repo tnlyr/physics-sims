@@ -109,7 +109,7 @@ public class ShmController implements Initializable {
           Timeline timeline = new Timeline();
 
           timeline.setCycleCount((int)(angle*2));
-          //timeline.setAutoReverse(true);
+
 
 
 
@@ -125,6 +125,23 @@ public class ShmController implements Initializable {
           timeline.getKeyFrames().addAll(keyFrame);
 
           timeline.play();
+          timeline.setOnFinished((event -> {
+
+              Timeline tl1 = new Timeline();
+              tl1.setCycleCount((int)angle*2);
+
+              KeyFrame keyFrame1 = new KeyFrame(Duration.millis(10), new EventHandler<ActionEvent>() {
+                  double angle = rotate.getAngle();
+                  @Override
+                  public void handle(ActionEvent event) {
+                      angle -= 1;
+                      rotate.setAngle(angle);
+                  }
+              });
+
+              tl1.getKeyFrames().add(keyFrame1);
+              tl1.play();
+          }));
 
       }
 
