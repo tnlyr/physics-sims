@@ -69,7 +69,6 @@ public class ShmController implements Initializable {
 
     playBtn.setOnAction((event -> {
 
-
         double angler = angleSpinner.getValue();
 
         animation(angler);
