@@ -36,6 +36,10 @@ public class ShmController implements Initializable {
     private Button resetBtn;
     @FXML
     private Pane pane;
+    @FXML
+    private Line pendulumArm;
+    @FXML
+    private  Circle pendulumBob;
 
 
 
@@ -55,24 +59,28 @@ public class ShmController implements Initializable {
         angleSpinner.setValueFactory(new SpinnerValueFactory.DoubleSpinnerValueFactory(0, Math.PI, Math.PI/4));
         massSpinner.setValueFactory(new SpinnerValueFactory.DoubleSpinnerValueFactory(1, 50, 10 ));
 
-        Line pendulumArm = new Line();
-        pendulumArm.setStartX(pane.getLayoutX()/2);
-        pendulumArm.setStartY(50);
+
+
         pendulumArm.setEndX(pendulumArm.getStartX() + lengthSpinner.getValue()*Math.sin(angleSpinner.getValue()));
-        pendulumArm.setEndX(pendulumArm.getStartX() + lengthSpinner.getValue()*Math.cos(angleSpinner.getValue()));
+        pendulumArm.setEndY(pendulumArm.getStartY() + lengthSpinner.getValue()*Math.cos(angleSpinner.getValue()));
         pendulumArm.setStroke(Color.BLACK);
 
-        Circle pendulumBob = new Circle(pendulumArm.getEndX(), pendulumArm.getEndY(), massSpinner.getValue());
+        pendulumBob.setCenterX(pendulumArm.getEndX());
+        pendulumBob.setCenterY(pendulumArm.getEndY());
+        pendulumBob.setRadius(massSpinner.getValue());
         pendulumBob.setFill(Color.RED);
 
         Group group = new Group();
         group.getChildren().addAll(pendulumArm, pendulumBob);
 
+        /*
         RotateTransition animation = new RotateTransition(Duration.seconds(1), group);
         animation.setByAngle(Math.toDegrees(angleSpinner.getValue()));
         animation.setCycleCount(Animation.INDEFINITE);
         animation.setAutoReverse(true);
         animation.play();
+/*
+        /*
 
         lengthSpinner.valueProperty().addListener((observable, oldValue, newValue) -> {
             pendulumArm.setEndX(pendulumArm.getStartX() + newValue * Math.sin(angleSpinner.getValue()));
@@ -92,7 +100,7 @@ public class ShmController implements Initializable {
         massSpinner.valueProperty().addListener((observable, oldValue, newValue) -> {
             pendulumBob.setRadius(newValue);
         });
-
+*/
         pane.getChildren().addAll(group);
 
 
