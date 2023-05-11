@@ -5,10 +5,13 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Group;
 import javafx.scene.control.Button;
 import javafx.scene.control.Slider;
 import javafx.scene.control.Spinner;
 import javafx.scene.control.SpinnerValueFactory;
+import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
 import javafx.scene.shape.*;
 import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
@@ -20,27 +23,21 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class ShmController implements Initializable {
 
     @FXML
-    private Spinner lengthSpinner;
+    private Spinner<Double> lengthSpinner;
     @FXML
     private Spinner<Double> angleSpinner;
     @FXML
-    private Spinner massSpinner;
+    private Spinner<Double> massSpinner;
     @FXML
-    private Spinner gravitySpinner;
-    @FXML
-    private Slider playbackSlider;
-    @FXML
-    private Circle topCircle;
-    @FXML
-    private Line string;
-    @FXML
-    private Rectangle rectangle;
-    @FXML
+    private Spinner<Double> gravitySpinner;
+     @FXML
     private Button playBtn;
     @FXML
     private Button resetBtn;
+    @FXML
+    private Pane pane;
 
-    Timeline tl;
+
 
 
 
@@ -54,27 +51,58 @@ public class ShmController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
 
-        SpinnerValueFactory<Double> valueFactory = new SpinnerValueFactory.DoubleSpinnerValueFactory(0, 90);
-        valueFactory.setValue((double)1);
+        lengthSpinner.setValueFactory(new SpinnerValueFactory.DoubleSpinnerValueFactory(50, 500, 200));
+        angleSpinner.setValueFactory(new SpinnerValueFactory.DoubleSpinnerValueFactory(0, Math.PI, Math.PI/4));
+        massSpinner.setValueFactory(new SpinnerValueFactory.DoubleSpinnerValueFactory(1, 50, 10 ));
 
-        angleSpinner.setValueFactory(valueFactory);
+        Line pendulumArm = new Line();
+        pendulumArm.setStartX(pane.getLayoutX()/2);
+        pendulumArm.setStartY(50);
+        pendulumArm.setEndX(pendulumArm.getStartX() + lengthSpinner.getValue()*Math.sin(angleSpinner.getValue()));
+        pendulumArm.setEndX(pendulumArm.getStartX() + lengthSpinner.getValue()*Math.cos(angleSpinner.getValue()));
+        pendulumArm.setStroke(Color.BLACK);
 
-        angleSpinner.valueProperty().addListener((observable, oldValue, newValue) -> {
-            rotateLineTo(newValue, oldValue);
+        Circle pendulumBob = new Circle(pendulumArm.getEndX(), pendulumArm.getEndY(), massSpinner.getValue());
+        pendulumBob.setFill(Color.RED);
+
+        Group group = new Group();
+        group.getChildren().addAll(pendulumArm, pendulumBob);
+
+        RotateTransition animation = new RotateTransition(Duration.seconds(1), group);
+        animation.setByAngle(Math.toDegrees(angleSpinner.getValue()));
+        animation.setCycleCount(Animation.INDEFINITE);
+        animation.setAutoReverse(true);
+        animation.play();
+
+        lengthSpinner.valueProperty().addListener((observable, oldValue, newValue) -> {
+            pendulumArm.setEndX(pendulumArm.getStartX() + newValue * Math.sin(angleSpinner.getValue()));
+            pendulumArm.setEndY(pendulumArm.getStartY() + newValue * Math.cos(angleSpinner.getValue()));
+            pendulumBob.setCenterX(pendulumArm.getEndX());
+            pendulumBob.setCenterY(pendulumArm.getEndY());
         });
 
+        angleSpinner.valueProperty().addListener((observable, oldValue, newValue) -> {
+            pendulumArm.setEndX(pendulumArm.getStartX() + lengthSpinner.getValue() * Math.sin(newValue));
+            pendulumArm.setEndY(pendulumArm.getStartY() + lengthSpinner.getValue() * Math.cos(newValue));
+            pendulumBob.setCenterX(pendulumArm.getEndX());
+            pendulumBob.setCenterY(pendulumArm.getEndY());
+            animation.setByAngle(Math.toDegrees(newValue));
+        });
+
+        massSpinner.valueProperty().addListener((observable, oldValue, newValue) -> {
+            pendulumBob.setRadius(newValue);
+        });
+
+        pane.getChildren().addAll(group);
 
 
 
 
-    playBtn.setOnAction((event -> {
-
-        double angler = angleSpinner.getValue();
-
-        animation(angler);
 
 
-    }));
+
+
+
 
 
 
@@ -85,6 +113,7 @@ public class ShmController implements Initializable {
     }
 
 
+    /*
     private void rotateLineTo(double newAngle,double oldAngle) {
         //tl.stop();
         Rotate rot = new Rotate();
@@ -144,5 +173,5 @@ public class ShmController implements Initializable {
 
       }
 
-
+*/
 }
