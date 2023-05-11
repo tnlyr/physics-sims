@@ -36,10 +36,7 @@ public class ShmController implements Initializable {
     private Button resetBtn;
     @FXML
     private Pane pane;
-    @FXML
-    private Line pendulumArm;
-    @FXML
-    private  Circle pendulumBob;
+
 
 
 
@@ -59,12 +56,14 @@ public class ShmController implements Initializable {
         angleSpinner.setValueFactory(new SpinnerValueFactory.DoubleSpinnerValueFactory(0, Math.PI, Math.PI/4));
         massSpinner.setValueFactory(new SpinnerValueFactory.DoubleSpinnerValueFactory(1, 50, 10 ));
 
-
-
+        Line pendulumArm = new Line();
+        pendulumArm.setStartX(520);
+        pendulumArm.setStartY(50);
         pendulumArm.setEndX(pendulumArm.getStartX() + lengthSpinner.getValue()*Math.sin(angleSpinner.getValue()));
         pendulumArm.setEndY(pendulumArm.getStartY() + lengthSpinner.getValue()*Math.cos(angleSpinner.getValue()));
         pendulumArm.setStroke(Color.BLACK);
 
+        Circle pendulumBob = new Circle();
         pendulumBob.setCenterX(pendulumArm.getEndX());
         pendulumBob.setCenterY(pendulumArm.getEndY());
         pendulumBob.setRadius(massSpinner.getValue());
