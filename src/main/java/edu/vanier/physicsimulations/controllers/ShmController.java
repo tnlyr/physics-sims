@@ -43,8 +43,7 @@ public class ShmController implements Initializable {
 
 
 
-
-
+int dummy =0;
 
 
 
@@ -52,14 +51,14 @@ public class ShmController implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
 
         lengthSpinner.setValueFactory(new SpinnerValueFactory.DoubleSpinnerValueFactory(50, 500, 200));
-        angleSpinner.setValueFactory(new SpinnerValueFactory.DoubleSpinnerValueFactory(0, Math.PI, Math.PI/4));
+        angleSpinner.setValueFactory(new SpinnerValueFactory.DoubleSpinnerValueFactory(0, 90, 30));
         massSpinner.setValueFactory(new SpinnerValueFactory.DoubleSpinnerValueFactory(1, 50, 10 ));
 
         Line pendulumArm = new Line();
-        pendulumArm.setStartX(pane.getLayoutX()/2);
+        pendulumArm.setStartX(520);
         pendulumArm.setStartY(50);
-        pendulumArm.setEndX(pendulumArm.getStartX() + lengthSpinner.getValue()*Math.sin(angleSpinner.getValue()));
-        pendulumArm.setEndX(pendulumArm.getStartX() + lengthSpinner.getValue()*Math.cos(angleSpinner.getValue()));
+        pendulumArm.setEndX(pendulumArm.getStartX() - lengthSpinner.getValue()*Math.sin(Math.toDegrees(angleSpinner.getValue())));
+        pendulumArm.setEndY(pendulumArm.getStartY() - lengthSpinner.getValue()*Math.cos(Math.toDegrees(angleSpinner.getValue())));
         pendulumArm.setStroke(Color.BLACK);
 
         Circle pendulumBob = new Circle(pendulumArm.getEndX(), pendulumArm.getEndY(), massSpinner.getValue());
@@ -68,25 +67,28 @@ public class ShmController implements Initializable {
         Group group = new Group();
         group.getChildren().addAll(pendulumArm, pendulumBob);
 
+        /*
         RotateTransition animation = new RotateTransition(Duration.seconds(1), group);
         animation.setByAngle(Math.toDegrees(angleSpinner.getValue()));
         animation.setCycleCount(Animation.INDEFINITE);
         animation.setAutoReverse(true);
         animation.play();
 
+         */
+
         lengthSpinner.valueProperty().addListener((observable, oldValue, newValue) -> {
-            pendulumArm.setEndX(pendulumArm.getStartX() + newValue * Math.sin(angleSpinner.getValue()));
-            pendulumArm.setEndY(pendulumArm.getStartY() + newValue * Math.cos(angleSpinner.getValue()));
+            pendulumArm.setEndX(pendulumArm.getStartX() - newValue * Math.sin(Math.toDegrees(angleSpinner.getValue())));
+            pendulumArm.setEndY(pendulumArm.getStartY() - newValue * Math.cos(Math.toDegrees(angleSpinner.getValue())));
             pendulumBob.setCenterX(pendulumArm.getEndX());
             pendulumBob.setCenterY(pendulumArm.getEndY());
         });
 
         angleSpinner.valueProperty().addListener((observable, oldValue, newValue) -> {
-            pendulumArm.setEndX(pendulumArm.getStartX() + lengthSpinner.getValue() * Math.sin(newValue));
-            pendulumArm.setEndY(pendulumArm.getStartY() + lengthSpinner.getValue() * Math.cos(newValue));
+            pendulumArm.setEndX(pendulumArm.getStartX() + lengthSpinner.getValue() * Math.sin(Math.toRadians(newValue)));
+            pendulumArm.setEndY(pendulumArm.getStartY() + lengthSpinner.getValue() * Math.cos(Math.toRadians(newValue)));
             pendulumBob.setCenterX(pendulumArm.getEndX());
             pendulumBob.setCenterY(pendulumArm.getEndY());
-            animation.setByAngle(Math.toDegrees(newValue));
+            //animation.setByAngle(Math.toDegrees(newValue));
         });
 
         massSpinner.valueProperty().addListener((observable, oldValue, newValue) -> {
@@ -94,6 +96,18 @@ public class ShmController implements Initializable {
         });
 
         pane.getChildren().addAll(group);
+
+        playBtn.setOnAction((event -> {
+
+
+
+
+            animation(angleSpinner.getValue(), pendulumArm, group);
+        }));
+
+        resetBtn.setOnAction((reset) -> {
+            dummy =1;
+        });
 
 
 
@@ -125,14 +139,16 @@ public class ShmController implements Initializable {
 
       }
 
-      private void animation(double angle) {
+     */
+
+      private void animation(double angle, Line string, Group group) {
 
           Rotate rotate = new Rotate();
 
           rotate.setPivotX(string.getStartX());
           rotate.setPivotY(string.getStartY());
 
-          string.getTransforms().add(rotate);
+          group.getTransforms().add(rotate);
 
           Timeline timeline = new Timeline();
 
@@ -169,9 +185,16 @@ public class ShmController implements Initializable {
 
               tl1.getKeyFrames().add(keyFrame1);
               tl1.play();
+              tl1.setOnFinished((loop) -> {
+                  animation(angle, string, group);
+              });
+
+
           }));
+
+
 
       }
 
-*/
+
 }
