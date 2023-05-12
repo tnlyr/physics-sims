@@ -6,16 +6,15 @@ import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Button;
-import javafx.scene.control.ChoiceBox;
-import javafx.scene.control.Spinner;
-import javafx.scene.control.SpinnerValueFactory;
+import javafx.scene.Scene;
+import javafx.scene.control.*;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Ellipse;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
+import javafx.stage.Stage;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -55,8 +54,13 @@ public class OpticsController implements Initializable {
 
     @FXML
     Rectangle obj1;
+
     @FXML
     Text Magnification,focalLengthIndice,imageHeight,postionImage;
+
+    @FXML
+    MenuItem aboutBtn;
+
 
     double currentValueX;
     double currentValueY;
@@ -143,7 +147,9 @@ public class OpticsController implements Initializable {
         Line lineR5 = new Line();
         Line lineR6 = new Line();
 
-
+        aboutBtn.setOnAction(e -> {
+            onHelp();
+        });
 
         resetBtn.setOnAction(e -> {
             opticsContainer.getChildren().remove(lineR1);
@@ -330,6 +336,71 @@ public class OpticsController implements Initializable {
 
     }
 
+    public void onHelp() {
+        Stage stage = new Stage();
+        TextArea textArea = new TextArea();
+        textArea.setWrapText(true);
+        textArea.setEditable(false);
+        textArea.setText("""
+                  File button
+                         
+                          -Import Simulation
+                         
+                         
+                         allows you to import any saved simulations from your computer\s
+                         
+                         
+                          - Export Simulation
+                         
+                         
+                         allows you to save your current simulation on your computer.
+                         
+                         
+                          - Help button
+                         
+                          The Help button gives the user access to the documentation to understand how the simulation work
+                         
+                Optics Setting
+                         
+                         - Object distance
+                         
+                         Allows the user to select the object's distance in meters 500 meters by either using the up and down arrows or manually entering the number.
+                         
+                         
+                         - Object Height
+                         
+                         Allows the user to select the object's height in meters 200 meters by either using the up and down arrows or manually entering the number.
+                         
+                         - Focal Length
+                         
+                         Allows the user to select the lens’ height in meters 300 meters by either using the up and down arrows or manually entering the number.
+                         
+                         
+                         - Lens Type
+                         
+                         Allows the user to select the lens type between Convergent and Divergent by clicking on the menu drop-down and selecting the lens type manually.
+                         
+                         
+                 Simulation control
+                         
+                         -Play Button
+                         
+                          The play button allows the user to start the simulation; once it is clicked and the object’s image  is created, and the 3 primary rays are displayed.
+                         
+                         - Rest Button
+                         
+                         The Reset Button allows users to reset the simulation by removing the previous object’s image and 3 primary rays.
+                         
+                         
+                         - Foot Bar
+                         
+                          The toggle bar displays the simulation's current image position, Image Height, Focal Length and Magnification.
+                """);
+        Scene scene = new Scene(textArea, 300, 300);
+        stage.setTitle("Help Window");
+        stage.setScene(scene);
+        stage.show();
+    }
     public void getLenses(ActionEvent event) {
 
         String lenses = lensTypeDrag.getValue();
