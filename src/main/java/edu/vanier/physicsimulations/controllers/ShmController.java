@@ -154,6 +154,20 @@ int dummy =0;
           group.getTransforms().add(rotate);
 
           Timeline timeline = new Timeline();
+          timeline.setAutoReverse(true);
+          timeline.setCycleCount(Timeline.INDEFINITE);
+
+          KeyValue kv = new KeyValue(rotate.angleProperty(), angle*2, Interpolator.EASE_BOTH);
+          KeyFrame kf = new KeyFrame(Duration.millis(1000), kv);
+
+
+          timeline.getKeyFrames().addAll(kf);
+          timeline.play();
+
+
+
+
+          /*
 
           timeline.setCycleCount((int)(angle*2));
 
@@ -214,7 +228,7 @@ int dummy =0;
 
           });
 
-
+*/
 
       }
 
