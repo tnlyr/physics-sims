@@ -100,7 +100,7 @@ int dummy =0;
 
         pane.getChildren().addAll(group);
 
-        
+
 
         playBtn.setOnAction((event -> {
 
