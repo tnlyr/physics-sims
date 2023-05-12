@@ -51,8 +51,11 @@ int dummy =0;
     public void initialize(URL location, ResourceBundle resources) {
 
         lengthSpinner.setValueFactory(new SpinnerValueFactory.DoubleSpinnerValueFactory(50, 500, 200));
+        lengthSpinner.setEditable(true);
         angleSpinner.setValueFactory(new SpinnerValueFactory.DoubleSpinnerValueFactory(0, 90, 30));
+        angleSpinner.setEditable(true);
         massSpinner.setValueFactory(new SpinnerValueFactory.DoubleSpinnerValueFactory(1, 50, 10 ));
+        massSpinner.setEditable(true);
 
         Line pendulumArm = new Line();
         pendulumArm.setStartX(520);
@@ -97,17 +100,16 @@ int dummy =0;
 
         pane.getChildren().addAll(group);
 
+        
+
         playBtn.setOnAction((event -> {
 
-
-
-
-            animation(angleSpinner.getValue(), pendulumArm, group);
+            animation(angleSpinner.getValue(), pendulumArm, group, resetBtn);
         }));
 
-        resetBtn.setOnAction((reset) -> {
-            dummy =1;
-        });
+
+
+
 
 
 
@@ -141,9 +143,10 @@ int dummy =0;
 
      */
 
-      private void animation(double angle, Line string, Group group) {
+      private void animation(double angle, Line string, Group group, Button reset) {
 
           Rotate rotate = new Rotate();
+
 
           rotate.setPivotX(string.getStartX());
           rotate.setPivotY(string.getStartY());
@@ -157,6 +160,9 @@ int dummy =0;
 
 
 
+
+
+
           KeyFrame keyFrame = new KeyFrame(Duration.millis(10), new EventHandler<ActionEvent>() {
               double angle =0;
               @Override
@@ -164,15 +170,22 @@ int dummy =0;
                   angle += 1;
                   rotate.setAngle(angle);
               }
+
+
           });
+
 
           timeline.getKeyFrames().addAll(keyFrame);
 
+
           timeline.play();
+
+          Timeline tl1 = new Timeline();
           timeline.setOnFinished((event -> {
 
-              Timeline tl1 = new Timeline();
+
               tl1.setCycleCount((int)angle*2);
+
 
               KeyFrame keyFrame1 = new KeyFrame(Duration.millis(10), new EventHandler<ActionEvent>() {
                   double angle = rotate.getAngle();
@@ -186,15 +199,26 @@ int dummy =0;
               tl1.getKeyFrames().add(keyFrame1);
               tl1.play();
               tl1.setOnFinished((loop) -> {
-                  animation(angle, string, group);
+                  animation(angle, string, group, reset);
               });
 
 
           }));
 
+          reset.setOnAction((stop) -> {
+              timeline.stop();
+              tl1.stop();
+
+
+
+
+          });
+
 
 
       }
+
+
 
 
 }
