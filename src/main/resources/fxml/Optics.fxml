@@ -34,7 +34,7 @@
                 </Menu>
                 <Menu fx:id="helpMenuBarbtn" mnemonicParsing="false" text="Help">
                     <items>
-                        <MenuItem mnemonicParsing="false" text="About" />
+                        <MenuItem fx:id="aboutBtn" mnemonicParsing="false" text="About" />
                     </items>
                 </Menu>
             </menus>
@@ -106,9 +106,13 @@
         </HBox>
         <Pane fx:id="opticsContainer" style="-fx-background-color: #fff;" VBox.vgrow="ALWAYS">
             <children>
-                <Rectangle fx:id="object" arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="107.0" layoutX="110.0" layoutY="269.0" stroke="BLACK" strokeType="INSIDE" width="15.0" />
-                <Line endX="1064.0" layoutX="236.0" layoutY="376.0" startX="-225.1289825439453" />
+                <Line fx:id="line" endX="10000.0" layoutX="236.0" layoutY="376.0" startX="-2250.1289825439453" />
                 <Ellipse fx:id="lens" fill="#0084ff78" layoutX="654.0" layoutY="367.0" radiusX="12.0" radiusY="107.0" stroke="BLACK" strokeType="INSIDE" />
+            <Pane fx:id="obj" layoutX="192.0" layoutY="376.0" prefHeight="0.0" prefWidth="21.0">
+               <children>
+                  <Rectangle fx:id="obj1" arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" stroke="BLACK" strokeType="INSIDE" width="21.0" />
+               </children>
+            </Pane>
             </children></Pane>
         <HBox style="-fx-background-color: #eee; -fx-border-color: #ccc;">
             <children>
