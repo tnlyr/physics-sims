@@ -104,37 +104,37 @@
                   <HBox prefHeight="100.0" prefWidth="200.0" spacing="10.0">
                      <children>
                         <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Timer:" />
-                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="0:00 s" />
+                        <Text fx:id="timer" strokeType="OUTSIDE" strokeWidth="0.0" text="0:00 s" />
                      </children>
                   </HBox>
                   <HBox prefHeight="100.0" prefWidth="200.0" spacing="10.0">
                      <children>
                         <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Current Velocity:" />
-                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="0.00 m/s" />
+                        <Text fx:id="currentVelocity" strokeType="OUTSIDE" strokeWidth="0.0" text="0.00 m/s" />
                      </children>
                   </HBox>
                   <HBox prefHeight="100.0" prefWidth="200.0" spacing="10.0">
                      <children>
                         <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Period:" />
-                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="0.00 s" />
+                        <Text fx:id="period" strokeType="OUTSIDE" strokeWidth="0.0" text="0.00 s" />
                      </children>
                   </HBox>
                   <HBox prefHeight="100.0" prefWidth="200.0">
                      <children>
                         <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Kinetic Energy: " />
-                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="0.00J" />
+                        <Text fx:id="kineticEnergy" strokeType="OUTSIDE" strokeWidth="0.0" text="0.00J" />
                      </children>
                   </HBox>
                   <HBox prefHeight="100.0" prefWidth="200.0">
                      <children>
                         <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Potential Energy: " />
-                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="0.00J" />
+                        <Text fx:id="potentialEnergy" strokeType="OUTSIDE" strokeWidth="0.0" text="0.00J" />
                      </children>
                   </HBox>
                   <HBox prefHeight="100.0" prefWidth="200.0">
                      <children>
                         <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Total Energy: " />
-                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="0.00J" />
+                        <Text fx:id="totalEnergy" strokeType="OUTSIDE" strokeWidth="0.0" text="0.00J" />
                      </children>
                   </HBox>
                   <HBox prefHeight="17.0" prefWidth="34.0">

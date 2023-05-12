@@ -56,6 +56,7 @@ int dummy =0;
         angleSpinner.setEditable(true);
         massSpinner.setValueFactory(new SpinnerValueFactory.DoubleSpinnerValueFactory(1, 50, 10 ));
         massSpinner.setEditable(true);
+        gravitySpinner.setValueFactory(new SpinnerValueFactory.DoubleSpinnerValueFactory(5, 30, 9.8));
 
         Line pendulumArm = new Line();
         pendulumArm.setStartX(520);
@@ -70,21 +71,6 @@ int dummy =0;
         Group group = new Group();
         group.getChildren().addAll(pendulumArm, pendulumBob);
 
-        /*
-        RotateTransition animation = new RotateTransition(Duration.seconds(1), group);
-        animation.setByAngle(Math.toDegrees(angleSpinner.getValue()));
-        animation.setCycleCount(Animation.INDEFINITE);
-        animation.setAutoReverse(true);
-        animation.play();
-
-         */
-
-        lengthSpinner.valueProperty().addListener((observable, oldValue, newValue) -> {
-            pendulumArm.setEndX(pendulumArm.getStartX() - newValue * Math.sin(Math.toDegrees(angleSpinner.getValue())));
-            pendulumArm.setEndY(pendulumArm.getStartY() - newValue * Math.cos(Math.toDegrees(angleSpinner.getValue())));
-            pendulumBob.setCenterX(pendulumArm.getEndX());
-            pendulumBob.setCenterY(pendulumArm.getEndY());
-        });
 
         angleSpinner.valueProperty().addListener((observable, oldValue, newValue) -> {
             pendulumArm.setEndX(pendulumArm.getStartX() + lengthSpinner.getValue() * Math.sin(Math.toRadians(newValue)));
@@ -93,6 +79,15 @@ int dummy =0;
             pendulumBob.setCenterY(pendulumArm.getEndY());
             //animation.setByAngle(Math.toDegrees(newValue));
         });
+
+        lengthSpinner.valueProperty().addListener((observable, oldValue, newValue) -> {
+            pendulumArm.setEndX(pendulumArm.getStartX() - newValue * Math.sin(Math.toDegrees(angleSpinner.getValue())));
+            pendulumArm.setEndY(pendulumArm.getStartY() - newValue * Math.cos(Math.toDegrees(angleSpinner.getValue())));
+            pendulumBob.setCenterX(pendulumArm.getEndX());
+            pendulumBob.setCenterY(pendulumArm.getEndY());
+        });
+
+
 
         massSpinner.valueProperty().addListener((observable, oldValue, newValue) -> {
             pendulumBob.setRadius(newValue);
@@ -160,77 +155,29 @@ int dummy =0;
           KeyValue kv = new KeyValue(rotate.angleProperty(), angle*2, Interpolator.EASE_BOTH);
           KeyFrame kf = new KeyFrame(Duration.millis(1000), kv);
 
-
-          timeline.getKeyFrames().addAll(kf);
-          timeline.play();
-
+          KeyValue kv1 = new KeyValue(rotate.angleProperty(), 0);
+          KeyFrame kf1 = new KeyFrame(Duration.ZERO, kv1);
 
 
+          timeline.getKeyFrames().addAll(kf1, kf);
+          timeline.playFromStart();
 
-          /*
+          reset.setOnAction((event) -> {
 
-          timeline.setCycleCount((int)(angle*2));
-
-
-
-
-
-
-
-          KeyFrame keyFrame = new KeyFrame(Duration.millis(10), new EventHandler<ActionEvent>() {
-              double angle =0;
-              @Override
-              public void handle(ActionEvent event) {
-                  angle += 1;
-                  rotate.setAngle(angle);
-              }
-
-
-          });
-
-
-          timeline.getKeyFrames().addAll(keyFrame);
-
-
-          timeline.play();
-
-          Timeline tl1 = new Timeline();
-          timeline.setOnFinished((event -> {
-
-
-              tl1.setCycleCount((int)angle*2);
-
-
-              KeyFrame keyFrame1 = new KeyFrame(Duration.millis(10), new EventHandler<ActionEvent>() {
-                  double angle = rotate.getAngle();
-                  @Override
-                  public void handle(ActionEvent event) {
-                      angle -= 1;
-                      rotate.setAngle(angle);
-                  }
-              });
-
-              tl1.getKeyFrames().add(keyFrame1);
-              tl1.play();
-              tl1.setOnFinished((loop) -> {
-                  animation(angle, string, group, reset);
-              });
-
-
-          }));
-
-          reset.setOnAction((stop) -> {
+              timeline.jumpTo(Duration.ZERO);
               timeline.stop();
-              tl1.stop();
-
-
-
-
           });
 
-*/
+
+
+
+
+
+
 
       }
+
+
 
 
 
