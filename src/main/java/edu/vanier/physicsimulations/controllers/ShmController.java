@@ -198,7 +198,8 @@ int dummy =0;
 
           period.setText(Double.toString(Math.round(pe.getPeriod())));
           totalEnergy.setText(Double.toString(Math.round(pe.getTotalEnergy())));
-
+          System.out.println(pe.velocityCalc(timeline.getCurrentTime().toSeconds()));
+          System.out.println(pe.velocityCalc(14));
 
 
 
