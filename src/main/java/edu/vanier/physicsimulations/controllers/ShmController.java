@@ -1,5 +1,6 @@
 package edu.vanier.physicsimulations.controllers;
 
+import edu.vanier.physicsimulations.engines.ShmEngine;
 import javafx.animation.*;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -13,6 +14,7 @@ import javafx.scene.control.SpinnerValueFactory;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.*;
+import javafx.scene.text.Text;
 import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
 
@@ -36,9 +38,16 @@ public class ShmController implements Initializable {
     private Button resetBtn;
     @FXML
     private Pane pane;
-
-
-
+    @FXML
+    private Text period;
+    @FXML
+    private Text totalEnergy;
+    @FXML
+    private Text potentialEnergy;
+    @FXML
+    private Text kineticEnergy;
+    @FXML
+    private Text currentVelocity;
 
 
 
@@ -57,6 +66,12 @@ int dummy =0;
         massSpinner.setValueFactory(new SpinnerValueFactory.DoubleSpinnerValueFactory(1, 50, 10 ));
         massSpinner.setEditable(true);
         gravitySpinner.setValueFactory(new SpinnerValueFactory.DoubleSpinnerValueFactory(5, 30, 9.8));
+        gravitySpinner.setEditable(true);
+
+
+
+
+
 
         Line pendulumArm = new Line();
         pendulumArm.setStartX(520);
@@ -100,6 +115,15 @@ int dummy =0;
         playBtn.setOnAction((event -> {
 
             animation(angleSpinner.getValue(), pendulumArm, group, resetBtn);
+
+            ShmEngine pe =new ShmEngine(angleSpinner.getValue(), lengthSpinner.getValue(), massSpinner.getValue(), gravitySpinner.getValue());
+
+            pe.setPeriod();
+            period.setText(Double.toString(Math.round(pe.getPeriod())) + " s");
+            pe.setHeight();
+            pe.setTotalEnergy();
+            totalEnergy.setText(Double.toString(Math.round(pe.getTotalEnergy())) + " J");
+
         }));
 
 
@@ -166,6 +190,7 @@ int dummy =0;
 
               timeline.jumpTo(Duration.ZERO);
               timeline.stop();
+
           });
 
 
