@@ -118,12 +118,13 @@ int dummy =0;
 
             ShmEngine pe =new ShmEngine(angleSpinner.getValue(), lengthSpinner.getValue(), massSpinner.getValue(), gravitySpinner.getValue());
 
+            /*
             pe.setPeriod();
             period.setText(Double.toString(Math.round(pe.getPeriod())) + " s");
             pe.setHeight();
             pe.setTotalEnergy();
             totalEnergy.setText(Double.toString(Math.round(pe.getTotalEnergy())) + " J");
-
+            */
         }));
 
 
@@ -192,6 +193,11 @@ int dummy =0;
               timeline.stop();
 
           });
+
+          ShmEngine pe =new ShmEngine(angleSpinner.getValue(), lengthSpinner.getValue(), massSpinner.getValue(), gravitySpinner.getValue());
+
+          period.setText(Double.toString(Math.round(pe.getPeriod())));
+          totalEnergy.setText(Double.toString(Math.round(pe.getTotalEnergy())));
 
 
 
