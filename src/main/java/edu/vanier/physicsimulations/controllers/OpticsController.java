@@ -4,29 +4,22 @@ import edu.vanier.physicsimulations.engines.OpticsEngine;
 import javafx.animation.*;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
-import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.Pane;
-import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Ellipse;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Polygon;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
-import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
 import java.net.URL;
-import java.util.Arrays;
-import java.util.List;
 import java.util.ResourceBundle;
 
 public class OpticsController implements Initializable {
@@ -190,9 +183,9 @@ public class OpticsController implements Initializable {
         playBtn.setOnAction(e -> {
 
             //opticsContainer.getChildren().add(triangleConvergentUp);
-           // opticsContainer.getChildren().add(triangleConvergentDown);
-           // opticsContainer.getChildren().add(triangleDivergentDown);
-           // opticsContainer.getChildren().add(triangleDivergentUp);
+            // opticsContainer.getChildren().add(triangleConvergentDown);
+            // opticsContainer.getChildren().add(triangleDivergentDown);
+            // opticsContainer.getChildren().add(triangleDivergentUp);
 
             opticsContainer.getChildren().add(lineR1);
             opticsContainer.getChildren().add(lineR2);
@@ -206,48 +199,6 @@ public class OpticsController implements Initializable {
             rectangle.setFill(Color.BLACK);
             opticsContainer.getChildren().add(rectangle);
 
-
-            String lenses = lensTypeDrag.getValue();
-            if (lenses.equals("Convergent") && Math.abs(valueFactoryX.getValue()) < currentValueFocalLength) {
-                // Upright, virtual, enlarged
-                double imageDistance = OpticsEngine.lensEquation(valueFactoryX.getValue(), focalLength.getValue(), lensTypeDrag.getValue());
-                Double rectangleCurrentHeight = rectangle.getHeight();
-                Double rectangleCurrentWidth = rectangle.getWidth();
-                if (valueFactoryX.getValue() > 0) {
-                    rectangle.setX(lens.getLayoutX() + (imageDistance));
-                } else if (valueFactoryX.getValue() < 0) {
-                    rectangle.setX(lens.getLayoutX() + (Math.abs(imageDistance)));
-
-                }
-                rectangle.setHeight(rectangleCurrentHeight * (Math.abs(imageDistance / valueFactoryX.getValue())));
-                rectangle.setWidth(rectangleCurrentWidth * (Math.abs(imageDistance / valueFactoryX.getValue())));
-                if (valueFactoryY.getValue() > 0) {
-                    rectangle.setY(lineHeight - rectangle.getHeight());
-                } else if (valueFactoryY.getValue() < 0) {
-                    rectangle.setY(lineHeight);
-                }
-
-            } else if (lenses.equals("Convergent") && valueFactoryX.getValue() == currentValueFocalLength) {
-                double imageDistance = OpticsEngine.lensEquation(valueFactoryX.getValue(), focalLength.getValue(), lensTypeDrag.getValue());
-                rectangle.setX(lens.getLayoutX() + (imageDistance));
-
-            } else if (lenses.equals("Convergent") && Math.abs(valueFactoryX.getValue()) > currentValueFocalLength) {
-                double imageDistance = OpticsEngine.lensEquation(valueFactoryX.getValue(), focalLength.getValue(), lensTypeDrag.getValue());
-                Double rectangleCurrentHeight = rectangle.getHeight();
-                Double rectangleCurrentWidth = rectangle.getWidth();
-                rectangle.setWidth(rectangleCurrentWidth * (Math.abs(imageDistance / valueFactoryX.getValue())));
-                if (valueFactoryX.getValue() > 0) {
-                    rectangle.setX(lens.getLayoutX() + (imageDistance));
-                } else if (valueFactoryX.getValue() < 0) {
-                    rectangle.setX(lens.getLayoutX() - (Math.abs(imageDistance)));
-                }
-                rectangle.setHeight(rectangleCurrentHeight * (Math.abs(imageDistance / valueFactoryX.getValue())));
-                if (valueFactoryY.getValue() < 0) {
-                    rectangle.setY(lineHeight - rectangle.getHeight());
-                } else if (valueFactoryY.getValue() > 0) {
-                    rectangle.setY(lineHeight);
-                }
-            }
 
             if (lenses.equals("Divergent")) {
                 double imageDistance = OpticsEngine.lensEquation(valueFactoryX.getValue(), focalLength.getValue(), lensTypeDrag.getValue());
@@ -357,7 +308,7 @@ public class OpticsController implements Initializable {
             );
             timeline.play(); // Start the animation for lineR1
 
-            // Repeat for all other lines
+
             timeline = new Timeline(
                     new KeyFrame(Duration.ZERO, new KeyValue(lineR2.opacityProperty(), 0.0)),
                     new KeyFrame(Duration.seconds(5), new KeyValue(lineR2.opacityProperty(), 1.0))
@@ -397,76 +348,73 @@ public class OpticsController implements Initializable {
 
 
     }
-       // public void convergentAnalysis(){
-
-       // }
 
 
-            public void onHelp () {
-                Stage stage = new Stage();
-                TextArea textArea = new TextArea();
-                textArea.setWrapText(true);
-                textArea.setEditable(false);
-                textArea.setText("""
-                          File button
-                                 
-                                  -Import Simulation
-                                 
-                                 
-                                 allows you to import any saved simulations from your computer\s
-                                 
-                                 
-                                  - Export Simulation
-                                 
-                                 
-                                 allows you to save your current simulation on your computer.
-                                 
-                                 
-                                  - Help button
-                                 
-                                  The Help button gives the user access to the documentation to understand how the simulation work
-                                 
-                        Optics Setting
-                                 
-                                 - Object distance
-                                 
-                                 Allows the user to select the object's distance in meters 500 meters by either using the up and down arrows or manually entering the number.
-                                 
-                                 
-                                 - Object Height
-                                 
-                                 Allows the user to select the object's height in meters 200 meters by either using the up and down arrows or manually entering the number.
-                                 
-                                 - Focal Length
-                                 
-                                 Allows the user to select the lens’ height in meters 300 meters by either using the up and down arrows or manually entering the number.
-                                 
-                                 
-                                 - Lens Type
-                                 
-                                 Allows the user to select the lens type between Convergent and Divergent by clicking on the menu drop-down and selecting the lens type manually.
-                                 
-                                 
-                         Simulation control
-                                 
-                                 -Play Button
-                                 
-                                  The play button allows the user to start the simulation; once it is clicked and the object’s image  is created, and the 3 primary rays are displayed.
-                                 
-                                 - Rest Button
-                                 
-                                 The Reset Button allows users to reset the simulation by removing the previous object’s image and 3 primary rays.
-                                 
-                                 
-                                 - Foot Bar
-                                 
-                                  The toggle bar displays the simulation's current image position, Image Height, Focal Length and Magnification.
-                        """);
-                Scene scene = new Scene(textArea, 800, 800);
-                stage.setTitle("Help Window");
-                stage.setScene(scene);
-                stage.show();
-            }
+    public void onHelp() {
+        Stage stage = new Stage();
+        TextArea textArea = new TextArea();
+        textArea.setWrapText(true);
+        textArea.setEditable(false);
+        textArea.setText("""
+                  File button
+                         
+                          -Import Simulation
+                         
+                         
+                         allows you to import any saved simulations from your computer\s
+                         
+                         
+                          - Export Simulation
+                         
+                         
+                         allows you to save your current simulation on your computer.
+                         
+                         
+                          - Help button
+                         
+                          The Help button gives the user access to the documentation to understand how the simulation work
+                         
+                Optics Setting
+                         
+                         - Object distance
+                         
+                         Allows the user to select the object's distance in meters 500 meters by either using the up and down arrows or manually entering the number.
+                         
+                         
+                         - Object Height
+                         
+                         Allows the user to select the object's height in meters 200 meters by either using the up and down arrows or manually entering the number.
+                         
+                         - Focal Length
+                         
+                         Allows the user to select the lens’ height in meters 300 meters by either using the up and down arrows or manually entering the number.
+                         
+                         
+                         - Lens Type
+                         
+                         Allows the user to select the lens type between Convergent and Divergent by clicking on the menu drop-down and selecting the lens type manually.
+                         
+                         
+                 Simulation control
+                         
+                         -Play Button
+                         
+                          The play button allows the user to start the simulation; once it is clicked and the object’s image  is created, and the 3 primary rays are displayed.
+                         
+                         - Rest Button
+                         
+                         The Reset Button allows users to reset the simulation by removing the previous object’s image and 3 primary rays.
+                         
+                         
+                         - Foot Bar
+                         
+                          The toggle bar displays the simulation's current image position, Image Height, Focal Length and Magnification.
+                """);
+        Scene scene = new Scene(textArea, 800, 800);
+        stage.setTitle("Help Window");
+        stage.setScene(scene);
+        stage.show();
+    }
 
 
     public void getLenses(ActionEvent event) {
@@ -483,12 +431,12 @@ public class OpticsController implements Initializable {
             );
             triangleConvergentDown.setFill(Color.BLACK);
             triangleConvergentDown.setLayoutX(649);
-            triangleConvergentDown.setLayoutY(lens.getLayoutY() + lens.getRadiusY() );
+            triangleConvergentDown.setLayoutY(lens.getLayoutY() + lens.getRadiusY());
 
             triangleConvergentUp.getPoints().addAll(new Double[]{
                     10.0, 5.0,
                     5.0, 15.0,
-                    15.0, 15.0 });
+                    15.0, 15.0});
             // Set the fill and stroke color of the polygon
             triangleConvergentUp.setFill(Color.BLACK);
             triangleConvergentUp.setLayoutX(644);
@@ -521,7 +469,7 @@ public class OpticsController implements Initializable {
             triangleDivergentUp.getPoints().addAll(new Double[]{
                     10.0, 5.0,
                     5.0, 15.0,
-                    15.0, 15.0 });
+                    15.0, 15.0});
             // Set the fill and stroke color of the polygon
             triangleDivergentUp.setFill(Color.BLACK);
             triangleDivergentUp.setLayoutX(644);
@@ -548,5 +496,3 @@ public class OpticsController implements Initializable {
 
 
 }
-
-
