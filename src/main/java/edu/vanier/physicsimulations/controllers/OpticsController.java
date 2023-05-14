@@ -351,14 +351,14 @@ public class OpticsController implements Initializable {
 
             Double imageDistance = OpticsEngine.lensEquation(valueFactoryX.getValue(), focalLength.getValue(), lensTypeDrag.getValue());
             double magnificaitonValue = Math.abs(imageDistance / valueFactoryX.getValue());
-            Magnification.setText(String.valueOf(magnificaitonValue));
-            focalLengthIndice.setText(String.valueOf(valueFactoryFocalLength.getValue()));
+            Magnification.setText(String.valueOf(String.format("%.3f", magnificaitonValue)));
+            focalLengthIndice.setText(String.valueOf(String.format("%.3f",valueFactoryFocalLength.getValue())));
 
-            postionImage.setText(String.valueOf(imageDistance));
+            postionImage.setText(String.valueOf(String.format("%.3f",imageDistance)));
             if (obj1.getHeight() < 0) {
-                imageHeight.setText(String.valueOf(magnificaitonValue * rectangle.getHeight()));
+                imageHeight.setText(String.valueOf(String.format("%.3f",magnificaitonValue * rectangle.getHeight())));
             } else if (obj1.getHeight() > 0) {
-                imageHeight.setText(String.valueOf(-1 * (magnificaitonValue * rectangle.getHeight())));
+                imageHeight.setText(String.valueOf(String.format("%.3f",-1 * (magnificaitonValue * rectangle.getHeight()))));
             }
 
             Timeline timeline = new Timeline(
