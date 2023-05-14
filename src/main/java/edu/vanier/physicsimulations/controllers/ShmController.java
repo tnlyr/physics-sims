@@ -19,6 +19,7 @@ import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
 
 import java.net.URL;
+import java.text.DecimalFormat;
 import java.util.ResourceBundle;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.DoubleToIntFunction;
@@ -167,6 +168,8 @@ public class ShmController implements Initializable {
 
       private void animation(double angle, Line string, Group group, Button reset) {
 
+          DecimalFormat decfor = new DecimalFormat("0.00");
+
           ShmEngine pe =new ShmEngine(angleSpinner.getValue(), lengthSpinner.getValue(), massSpinner.getValue(), gravitySpinner.getValue());
 
           Rotate rotate = new Rotate();
@@ -199,26 +202,28 @@ public class ShmController implements Initializable {
 
 
 
-          period.setText(Double.toString(Math.round(pe.getPeriod())) + " s");
-          totalEnergy.setText(Double.toString(Math.round(pe.getTotalEnergy())) + " J");
+          period.setText(decfor.format(pe.getPeriod()) + " s");
+          totalEnergy.setText(decfor.format(pe.getTotalEnergy()) + " J");
          // System.out.println(pe.velocityCalc(timeline.getCurrentTime().toSeconds()));
           //System.out.println(pe.velocityCalc(14));
           //System.out.println(pe.getAngularFreq());
 
-          KeyFrame textUpdate = new KeyFrame(Duration.millis(100), new EventHandler<ActionEvent>() {
+          KeyFrame textUpdate = new KeyFrame(Duration.millis(150), new EventHandler<ActionEvent>() {
               double counter = 0;
               @Override
               public void handle(ActionEvent event) {
-                  counter +=100;
+                  counter +=150;
                   double timeinsec = counter/1000;
-                  timer.setText(timeinsec + " s");
+                  timer.setText(decfor.format(timeinsec) + " s");
                   pe.setVelocity(pe.velocityCalc(timeinsec));
-                  currentVelocity.setText(Double.toString(pe.getVelocity()));
-                  kineticEnergy.setText(Double.toString(pe.getKineticEnergy()));
+                  currentVelocity.setText(decfor.format(pe.getVelocity()) + "m/s");
                   pe.setKineticEnergy(pe.kineticCalc(pe.getVelocity()));
+                  kineticEnergy.setText(decfor.format(pe.getKineticEnergy()) + " J");
+                  potentialEnergy.setText(decfor.format(pe.getTotalEnergy()-pe.getKineticEnergy()) + " J");
+
                  // System.out.println(pe.getVelocity());
-                  kineticEnergy.setText(Double.toString(pe.getKineticEnergy()));
-                  potentialEnergy.setText(Double.toString(pe.getTotalEnergy()-pe.getKineticEnergy()));
+                //  kineticEnergy.setText(Double.toString(pe.getKineticEnergy()));
+                 // potentialEnergy.setText(Double.toString(pe.getTotalEnergy()-pe.getKineticEnergy()));
               }
 
       });

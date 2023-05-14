@@ -71,8 +71,7 @@
          <children>
             <HBox prefHeight="100.0" prefWidth="200.0" spacing="10.0">
                <children>
-                  <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Playback Speed" />
-                  <Slider fx:id="playbackSlider" />
+
                </children>
                <HBox.margin>
                   <Insets left="200.0" />
