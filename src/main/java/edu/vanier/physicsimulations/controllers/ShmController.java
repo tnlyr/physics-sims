@@ -49,18 +49,19 @@ public class ShmController implements Initializable {
     private Text kineticEnergy;
     @FXML
     private Text currentVelocity;
+    @FXML
+    private Text timer;
 
 
 
 
-int dummy =0;
 
 
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
 
-        lengthSpinner.setValueFactory(new SpinnerValueFactory.DoubleSpinnerValueFactory(50, 500, 200));
+        lengthSpinner.setValueFactory(new SpinnerValueFactory.DoubleSpinnerValueFactory(1, 50, 1));
         lengthSpinner.setEditable(true);
         angleSpinner.setValueFactory(new SpinnerValueFactory.DoubleSpinnerValueFactory(0, 90, 30));
         angleSpinner.setEditable(true);
@@ -77,8 +78,8 @@ int dummy =0;
         Line pendulumArm = new Line();
         pendulumArm.setStartX(520);
         pendulumArm.setStartY(50);
-        pendulumArm.setEndX(pendulumArm.getStartX() - lengthSpinner.getValue()*Math.sin(Math.toDegrees(angleSpinner.getValue())));
-        pendulumArm.setEndY(pendulumArm.getStartY() - lengthSpinner.getValue()*Math.cos(Math.toDegrees(angleSpinner.getValue())));
+        pendulumArm.setEndX(pendulumArm.getStartX() - (150+lengthSpinner.getValue())*Math.sin(Math.toDegrees(angleSpinner.getValue())));
+        pendulumArm.setEndY(pendulumArm.getStartY() - (150+lengthSpinner.getValue())*Math.cos(Math.toDegrees(angleSpinner.getValue())));
         pendulumArm.setStroke(Color.BLACK);
 
         Circle pendulumBob = new Circle(pendulumArm.getEndX(), pendulumArm.getEndY(), massSpinner.getValue());
@@ -89,16 +90,16 @@ int dummy =0;
 
 
         angleSpinner.valueProperty().addListener((observable, oldValue, newValue) -> {
-            pendulumArm.setEndX(pendulumArm.getStartX() + lengthSpinner.getValue() * Math.sin(Math.toRadians(newValue)));
-            pendulumArm.setEndY(pendulumArm.getStartY() + lengthSpinner.getValue() * Math.cos(Math.toRadians(newValue)));
+            pendulumArm.setEndX(pendulumArm.getStartX() + (150+lengthSpinner.getValue()) * Math.sin(Math.toRadians(newValue)));
+            pendulumArm.setEndY(pendulumArm.getStartY() + (150+lengthSpinner.getValue()) * Math.cos(Math.toRadians(newValue)));
             pendulumBob.setCenterX(pendulumArm.getEndX());
             pendulumBob.setCenterY(pendulumArm.getEndY());
             //animation.setByAngle(Math.toDegrees(newValue));
         });
 
         lengthSpinner.valueProperty().addListener((observable, oldValue, newValue) -> {
-            pendulumArm.setEndX(pendulumArm.getStartX() - newValue * Math.sin(Math.toDegrees(angleSpinner.getValue())));
-            pendulumArm.setEndY(pendulumArm.getStartY() - newValue * Math.cos(Math.toDegrees(angleSpinner.getValue())));
+            pendulumArm.setEndX(pendulumArm.getStartX() - (150 + newValue) * Math.sin(Math.toDegrees(angleSpinner.getValue())));
+            pendulumArm.setEndY(pendulumArm.getStartY() - (150 + newValue) * Math.cos(Math.toDegrees(angleSpinner.getValue())));
             pendulumBob.setCenterX(pendulumArm.getEndX());
             pendulumBob.setCenterY(pendulumArm.getEndY());
         });
@@ -166,6 +167,8 @@ int dummy =0;
 
       private void animation(double angle, Line string, Group group, Button reset) {
 
+          ShmEngine pe =new ShmEngine(angleSpinner.getValue(), lengthSpinner.getValue(), massSpinner.getValue(), gravitySpinner.getValue());
+
           Rotate rotate = new Rotate();
 
 
@@ -179,14 +182,13 @@ int dummy =0;
           timeline.setCycleCount(Timeline.INDEFINITE);
 
           KeyValue kv = new KeyValue(rotate.angleProperty(), angle*2, Interpolator.EASE_BOTH);
-          KeyFrame kf = new KeyFrame(Duration.millis(1000), kv);
-
-          KeyValue kv1 = new KeyValue(rotate.angleProperty(), 0);
-          KeyFrame kf1 = new KeyFrame(Duration.ZERO, kv1);
+          KeyFrame kf = new KeyFrame(Duration.seconds(pe.getPeriod()/2), kv);
 
 
-          timeline.getKeyFrames().addAll(kf1, kf);
-          timeline.playFromStart();
+
+
+          timeline.getKeyFrames().addAll( kf);
+
 
           reset.setOnAction((event) -> {
 
@@ -195,18 +197,27 @@ int dummy =0;
 
           });
 
-          ShmEngine pe =new ShmEngine(angleSpinner.getValue(), lengthSpinner.getValue(), massSpinner.getValue(), gravitySpinner.getValue());
+
 
           period.setText(Double.toString(Math.round(pe.getPeriod())) + " s");
           totalEnergy.setText(Double.toString(Math.round(pe.getTotalEnergy())) + " J");
-          System.out.println(pe.velocityCalc(timeline.getCurrentTime().toSeconds()));
-          System.out.println(pe.velocityCalc(14));
-          System.out.println(pe.getAngularFreq());
+         // System.out.println(pe.velocityCalc(timeline.getCurrentTime().toSeconds()));
+          //System.out.println(pe.velocityCalc(14));
+          //System.out.println(pe.getAngularFreq());
 
           KeyFrame textUpdate = new KeyFrame(Duration.millis(100), new EventHandler<ActionEvent>() {
+              double counter = 0;
               @Override
               public void handle(ActionEvent event) {
-                  System.out.println("sewy");
+                  counter +=100;
+                  double timeinsec = counter/1000;
+                  timer.setText(timeinsec + " s");
+                  pe.setVelocity(pe.velocityCalc(timeinsec));
+                  currentVelocity.setText(Double.toString(pe.getVelocity()));
+                  kineticEnergy.setText(Double.toString(pe.getKineticEnergy()));
+                  pe.setKineticEnergy(pe.kineticCalc(pe.getVelocity()));
+                 // System.out.println(pe.getVelocity());
+                  kineticEnergy.setText(Double.toString(pe.getKineticEnergy()));
               }
 
       });
@@ -215,6 +226,8 @@ int dummy =0;
         text.getKeyFrames().add(textUpdate);
         text.setCycleCount(Timeline.INDEFINITE);
         text.play();
+
+          timeline.play();
 
 
 

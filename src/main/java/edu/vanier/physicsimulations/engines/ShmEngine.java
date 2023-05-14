@@ -6,7 +6,7 @@ public class ShmEngine {
     private double initialAngle, length, mass, gravity;
     private double period, kineticEnergy, potentialEnergy, totalEnergy, velocity, acceleration;
 
-    private double height, angularFreq;
+    private double height, angularFreq, currentTime;
 
 
 
@@ -23,16 +23,34 @@ public class ShmEngine {
         this.period = 2*Math.PI*Math.sqrt(this.length/this.gravity);
         this.angularFreq = (2*Math.PI)/this.period;
 
+
     }
 
-    public int velocityCalc(double time) {
+    public double kineticCalc(double velocity) {
+        double kin = 0.5*this.mass*Math.pow(velocity, 2);
+
+        return kin;
+
+    };
+
+
+
+
+    public double velocityCalc(double time) {
 
         double vel = -Math.toRadians(this.initialAngle)*this.angularFreq*Math.sin(this.angularFreq*time);
 
 
-        return (int)vel;
+        return vel;
     };
 
+    public double getCurrentTime() {
+        return currentTime;
+    }
+
+    public void setCurrentTime(double currentTime) {
+        this.currentTime = currentTime;
+    }
 
     public void setPeriod(double period) {
         this.period = period;
