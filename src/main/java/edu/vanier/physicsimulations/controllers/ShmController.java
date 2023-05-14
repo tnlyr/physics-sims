@@ -218,6 +218,7 @@ public class ShmController implements Initializable {
                   pe.setKineticEnergy(pe.kineticCalc(pe.getVelocity()));
                  // System.out.println(pe.getVelocity());
                   kineticEnergy.setText(Double.toString(pe.getKineticEnergy()));
+                  potentialEnergy.setText(Double.toString(pe.getTotalEnergy()-pe.getKineticEnergy()));
               }
 
       });
