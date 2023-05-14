@@ -197,11 +197,25 @@ int dummy =0;
 
           ShmEngine pe =new ShmEngine(angleSpinner.getValue(), lengthSpinner.getValue(), massSpinner.getValue(), gravitySpinner.getValue());
 
-          period.setText(Double.toString(Math.round(pe.getPeriod())));
-          totalEnergy.setText(Double.toString(Math.round(pe.getTotalEnergy())));
+          period.setText(Double.toString(Math.round(pe.getPeriod())) + " s");
+          totalEnergy.setText(Double.toString(Math.round(pe.getTotalEnergy())) + " J");
           System.out.println(pe.velocityCalc(timeline.getCurrentTime().toSeconds()));
           System.out.println(pe.velocityCalc(14));
           System.out.println(pe.getAngularFreq());
+
+          KeyFrame textUpdate = new KeyFrame(Duration.millis(100), new EventHandler<ActionEvent>() {
+              @Override
+              public void handle(ActionEvent event) {
+                  System.out.println("sewy");
+              }
+
+      });
+
+          Timeline text = new Timeline();
+        text.getKeyFrames().add(textUpdate);
+        text.setCycleCount(Timeline.INDEFINITE);
+        text.play();
+
 
 
 
