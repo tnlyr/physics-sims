@@ -1,374 +1,299 @@
 package edu.vanier.physicsimulations.engines;
 
-import javafx.animation.AnimationTimer;
+import edu.vanier.physicsimulations.controllers.GraphController;
+import edu.vanier.physicsimulations.controllers.ProjectileMotionController;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
+import javafx.geometry.Insets;
+import javafx.geometry.Point2D;
+import javafx.geometry.VPos;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.layout.Pane;
+import javafx.scene.effect.Light;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Line;
+import javafx.scene.text.TextAlignment;
+import javafx.util.Duration;
+import java.text.DecimalFormat;
+import java.util.ArrayList;
+import java.util.Objects;
 
-public class ProjectileMotionEngine {
-    private static ProjectileMotionEngine instance;
-    private Pane pane = new Pane();
-    private double initialPosX, initialPosY;
-    private double currentPosX, currentPosY;
-    private double nextPosX, nextPosY;
-    private double initialVelocity;
-    private double initialVelocityX, initialVelocityY;
-    private double currentVelocityX, currentVelocityY;
-    private double angle;
-    private double gravity;
-    private Line netVector, vectorX, vectorY;
-    private double centerX, centerY;
-    private double radius;
-    private Canvas canvas = new Canvas(1500, 1500);
-    private AnimationTimer timer;
-    private double time;
-    private double timeStep = 0.1;
-    private GraphicsContext graphicsContext;
+public class ProjectileMotionEngine extends StackPane {
+    private static ProjectileMotionController controller = new ProjectileMotionController();
+    public static double WIDTH = 1038 - controller.getWidth();
+    private final double PANE_WIDTH = getWidth();
+    private final double PANE_HEIGHT = getHeight();
+    private static int GROUND_HEIGHT = 25;
+    private static int WIDTH_PADDING = 30;
+    private double velocity, height, angle, gravity;
+    private boolean isPlaying = false;
+    private ArrayList<Point2D> points = new ArrayList<Point2D>();
+    private ArrayList<Light.Point> calculatedPoints = new ArrayList<Light.Point>();
+    private Canvas cv;
+    private int i = 0;
+    DecimalFormat df = new DecimalFormat("#.##");
+    double timestep;
+    double duration = motionDuration();
+    double widthSc, heightSc, scale;
+    Timeline timer;
+    private static GraphController graphController;
 
-    public ProjectileMotionEngine(double s, double a, Canvas c) {
-        setCanvas(canvas);
-        setGraphicsContext(graphicsContext);
-
-        this.time = 1;
-        this.initialPosX = 0;
-        this.angle = angle;
-        this.gravity = gravity;
-        this.graphicsContext = this.canvas.getGraphicsContext2D();
-
-        this.currentVelocityX = initialVelocity * Math.cos(Math.toRadians(angle));
-        this.currentVelocityY = initialVelocity * Math.sin(Math.toRadians(angle));
-        
-        this.initialVelocityY = initialVelocity * Math.sin(Math.toRadians(angle));
-        
-        this.initialPosX = 0;
-        this.initialPosY = this.canvas.getHeight() - radius;
-
-        this.timer = new AnimationTimer() {
-            @Override
-            public void handle(long now) {
-                update();
-            }
-        };
-
+    /**
+     * Constructs a new ProjectileMotionEngine object.
+     * The default size of the engine is set to PANE_WIDTH by PANE_HEIGHT.
+     * The engine's background is set to a blue color.
+     * The engine contains a Canvas object that is added to the engine's children.
+     */
+    public ProjectileMotionEngine() {
+        setPrefSize(PANE_WIDTH, PANE_HEIGHT);
+        setBackground(new Background(new BackgroundFill(Color.rgb(30, 144, 255), CornerRadii.EMPTY, Insets.EMPTY)));
+        cv = new Canvas(PANE_WIDTH, PANE_HEIGHT);
+        getChildren().add(cv);
     }
-    private void update() {
-        updateCoordinates();
-        updateVectors();
-        if (currentPosY >= canvas.getHeight() - radius) {
+
+    /**
+     * Sets the {@link ProjectileMotionController} to be used by the class.
+     * @param controller the {@link ProjectileMotionController} instance to be set
+     */
+    public void setController(ProjectileMotionController controller) {
+        this.controller = controller;
+    }
+
+    /**
+     * Overrides the layoutChildren method of the Parent class and sets the width and height of the canvas (cv)
+     * To be equal to the width and height of the current simulation window.
+     */
+    @Override
+    public void layoutChildren() {
+        super.layoutChildren();
+        cv.setWidth(getWidth());
+        cv.setHeight(getHeight());
+    }
+
+    /**
+     * Draws the projectile motion on the given Canvas based on the calculated points and settings.
+     * The Canvas is cleared before drawing.
+     * If the background is not imported from an image, the background is drawn as green ground.
+     * The current state of the motion is drawn as a gray rectangle on the Canvas.
+     * The highest point of the motion is displayed as an orange circle and its height is labeled as "Highest Point" near it.
+     * The last point of the motion is labeled with its coordinates as "(x, y)".
+     * The current position of the projectile is represented as a red circle.
+     * The x-coordinate of the current position is labeled as "Distance" at the bottom right corner of the Canvas.
+     * @param None.
+     * @return void.
+     */
+    public void draw() {
+        GraphicsContext g = cv.getGraphicsContext2D();
+        g.clearRect(0, 0, getWidth(), getHeight());
+
+        // Draw the background if not imported from image
+        if (checkBackground()) {
+            g.setFill(Color.rgb(50, 205, 50));
+            g.fillRect(0, getHeight() - GROUND_HEIGHT, getWidth(), GROUND_HEIGHT);
+        }
+
+        if (!isPlaying) {
+            return;
+        }
+
+        g.setFill(Color.GRAY);
+
+        if (height > 0) {
+            g.fillRect(WIDTH_PADDING, getHeight() - GROUND_HEIGHT - height * scale, 20, height * scale);
+        }
+
+        g.setFill(Color.BLACK);
+
+        DecimalFormat fmt = new DecimalFormat("#.##");
+
+        boolean displayedMaxY = false;
+
+        // Draw each point on Canvas
+        for (int j = 0; j <= i; j++) {
+            g.fillOval(calculatedPoints.get(j).getX(), calculatedPoints.get(j).getY(), 4, 4);
+
+            // If highest point
+            if (!displayedMaxY && Math.abs(points.get(j).getY() - highestPoint()) < 0.001) {
+                displayedMaxY = true;
+                g.fillText("Highest Point: " + fmt.format(points.get(j).getY()) + "m",
+                        calculatedPoints.get(j).getX() - 10, calculatedPoints.get(j).getY() - 10);
+                g.setFill(Color.ORANGE);
+                g.fillOval(calculatedPoints.get(j).getX(), calculatedPoints.get(j).getY() - 5, 15, 15);
+                g.setFill(Color.BLACK);
+            }
+
+            // If last point
+            if (j == i) {
+                String x = fmt.format(points.get(j).getX());
+                String y = fmt.format(points.get(j).getY());
+
+                g.fillText("(" + x + ", " + y + ")", calculatedPoints.get(j).getX() - 5, calculatedPoints.get(j).getY() - 5);
+            }
+        }
+
+        g.setFill(Color.RED);
+
+        g.fillOval(WIDTH_PADDING + getX(duration) * scale,
+                getHeight() - (GROUND_HEIGHT + getY(duration) * scale), 12, 12);
+
+        g.setFill(Color.BLACK);
+
+        String xText = "Distance: " + fmt.format(getX(duration)) + " m";
+
+        g.setTextAlign(TextAlignment.RIGHT);
+        g.setTextBaseline(VPos.BOTTOM);
+        g.fillText(xText, getWidth() - 10 - 20, getHeight() - 10);
+    }
+
+
+    /**
+     * Checks whether the current background of the node is the expected background.
+     * @return true if the current background matches the expected background, false otherwise.
+     */
+    private boolean checkBackground() {
+        Background expectedBackground = new Background(new BackgroundFill(Color.rgb(30, 144, 255), CornerRadii.EMPTY, Insets.EMPTY));
+        return Objects.equals(getBackground(), expectedBackground);
+    }
+
+    /**
+     * Starts the simulation with the given initial parameters, updating the canvas every timestep.
+     * @param v the initial velocity in m/s
+     * @param h the initial height in m
+     * @param a the launch angle in degrees
+     * @param g the gravitational acceleration in m/s^2
+     */
+    public void startSimulation(double v, double h, double a, double g) {
+        isPlaying = true;
+
+        this.angle = Math.toRadians(a);
+        this.velocity = v;
+        this.height = h;
+        this.gravity = g;
+
+        duration = motionDuration();
+        timestep = duration / 1000;
+
+        heightSc = (getHeight() - GROUND_HEIGHT) / (highestPoint() * 1.1);
+        widthSc = (getWidth() - 2 * WIDTH_PADDING) / (getX(duration));
+
+        scale = Math.min(heightSc, widthSc);
+
+        points.clear();
+        calculatedPoints.clear();
+        i = 0;
+
+        for (double t = 0; t <= duration; t += timestep) {
+            points.add(new Point2D(getX(t), getY(t)));
+            calculatedPoints.add(new Light.Point(WIDTH_PADDING + getX(t) * scale,
+                    (int) getHeight() - (GROUND_HEIGHT + getY(t) * scale), 0, Color.BLACK));
+        }
+
+        controller.setSimulationInfo(duration, getX(duration), highestPoint());
+
+        if (timer != null) {
             timer.stop();
         }
-        if (currentPosY < 0) {
-            currentPosY = 0;
-        }
-        if (currentPosX >= canvas.getWidth() - radius) {
-            currentPosX = canvas.getWidth() - radius;
-        }
-        if (currentPosX < 0) {
-            currentPosX = 0;
-        }
-        graphicsContext.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
-        drawVectors(graphicsContext);
+
+        timer = new Timeline();
+
+        KeyFrame kf = new KeyFrame(Duration.millis(timestep * 1000), event -> {
+            cv.getGraphicsContext2D().clearRect(0, 0, getWidth(), getHeight());
+            draw();
+
+            i++;
+
+            if (i == calculatedPoints.size() - 1) {
+                timer.stop();
+                timer = null;
+                isPlaying = false;
+                controller.setButtonsAfterEndOfSimulation();
+                try {
+                    graphController.stopGraph();
+                } catch (Exception e) {
+                    System.out.println("Graph is not running");
+                }
+            }
+        });
+        timer.setCycleCount(Timeline.INDEFINITE);
+        timer.getKeyFrames().add(kf);
+        timer.play();
     }
 
-    private double motionX(double time, double currentPosX, double currentVelocityX) {
-        double nextPosX = currentPosX + currentVelocityX * time;
-        return nextPosX;
+
+    /**
+     * Pauses the current simulation by pausing the timer and setting {@code isPlaying} to false.
+     */
+    public void pauseSimulation() {
+        timer.pause();
+        isPlaying = false;
     }
 
-    private double motionY(double time, double currentPosY, double currentVelocityY, double gravity) {
-        double nextPosY = currentPosY;
-        if (this.initialVelocityY == 0) {
-            return nextPosY;
-        }
-        else {
-            nextPosY = currentPosY + currentVelocityY * time + 0.5 * gravity * Math.pow(time, 2);
-            return nextPosY;
-        }
+    /**
+     * Resumes the current simulation by resuming the timer and setting {@code isPlaying} to true.
+     */
+    public void resumeSimulation() {
+        timer.play();
+        isPlaying = true;
     }
 
-    private double getNextVectorX() {
-        this.nextPosX = motionX(this.time, centerX, currentVelocityX);
-        return this.nextPosX;
+    /**
+     * Returns whether the simulation is currently running.
+     * @return true if the simulation is running, false otherwise
+     */
+    public boolean isRunning() {
+        return isPlaying;
     }
 
-    private double getNextVectorY() {
-        this.nextPosY = motionY(this.time, centerY, currentVelocityY, gravity);
-        return this.nextPosY;
+    /**
+     * Stops the simulation and sets isPlaying to false.
+     */
+    public void stopSimulation() {
+        timer.stop();
+        isPlaying = false;
     }
 
-    public void showCanva() {
-        this.currentPosX = this.initialPosX;
-        this.currentPosY = this.initialPosY;
-
-        this.centerX = currentPosX + radius;
-        this.centerY = currentPosY + radius;
-        drawVectors(this.graphicsContext);
+    /**
+     * Creates a new graph controller for the simulation.
+     */
+    public void graphSimulation() {
+        graphController = new GraphController(angle, velocity, gravity);
     }
 
-    public void drawVectors(GraphicsContext graphicsContext) {
-        this.graphicsContext.setFill(Color.BLACK);
-        graphicsContext.fillOval(currentPosX, currentPosY, radius, radius);
-
-        this.vectorX = new Line(centerX, centerY, centerX + getNextVectorX(), centerY);
-        this.vectorX.setStrokeWidth(3);
-        this.vectorX.setStroke(Color.RED);
-
-        this.vectorY = new Line(centerX, centerY, centerX, centerY + getNextVectorY());
-        this.vectorY.setStrokeWidth(3);
-        this.vectorY.setStroke(Color.GREEN);
-
-        this.netVector = new Line(centerX, centerY, centerX + getNextVectorX(), centerY + getNextVectorY());
-        this.netVector.setStrokeWidth(2);
-        this.netVector.setStroke(Color.BLUE);
-
-        graphicsContext.strokeLine(vectorX.getStartX(), vectorX.getStartY(), vectorX.getEndX(), vectorX.getEndY());
-        this.pane.getChildren().add(this.vectorX);
-        this.pane.getChildren().add(this.vectorY);
-        this.pane.getChildren().add(this.netVector);
+    /**
+     * Calculates the x-coordinate of the projectile at time t.
+     *
+     * @param t the time in seconds
+     * @return the x-coordinate in meters
+     */
+    private double getX(double t){
+        return velocity * Math.cos(angle) * t;
     }
 
-    public void updateCoordinates() {
-        this.currentPosX = motionX(this.time, this.currentPosX, this.currentVelocityX);
-        this.nextPosX = this.currentPosX;
-        this.currentPosY = motionY(this.time, this.currentPosY, this.currentVelocityY, this.gravity);
-        this.centerY = this.currentPosY + radius;
+    /**
+     * Calculates the y-coordinate of the projectile at time t.
+     *
+     * @param t the time in seconds
+     * @return the y-coordinate in meters
+     */
+    private double getY(double t){
+        return height + velocity * Math.sin(angle) * t - 0.5 * gravity * Math.pow(t, 2);
     }
 
-    private void updateVectors() {
-        this.pane.getChildren().remove(0, 3);
+    /**
+     * Calculates the maximum height reached by the projectile.
+     *
+     * @return the maximum height in meters
+     */
+    private double highestPoint() {
+        return getY(velocity * Math.sin(angle) / gravity);
     }
 
-    public void startAnimation() {
-        this.timer.start();
-    }
-
-    public void pauseAnimation() {
-        this.timer.stop();
-    }
-
-    public void resetAnimation() {
-        this.timer.stop();
-        this.time = 1;
-        graphicsContext.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
-        getPane().getChildren().clear();
-        this.currentPosX = this.initialPosX;
-        this.currentPosY = this.initialPosY;
-        this.currentVelocityX = initialVelocity * Math.cos(Math.toRadians(angle));
-        this.currentVelocityY = initialVelocity * Math.sin(Math.toRadians(angle));
-        this.centerX = currentPosX + radius;
-        this.centerY = currentPosY + radius;
-        this.pane.getChildren().remove(0, 3);
-        drawVectors(graphicsContext);
-    }
-
-    // Getters and Setters
-    public static ProjectileMotionEngine getInstance() {
-        return instance;
-    }
-
-    public static void setInstance(ProjectileMotionEngine instance) {
-        ProjectileMotionEngine.instance = instance;
-    }
-
-    public double getInitialPosX() {
-        return initialPosX;
-    }
-
-    public void setInitialPosX(double initialPosX) {
-        this.initialPosX = initialPosX;
-    }
-
-    public double getInitialPosY() {
-        return initialPosY;
-    }
-
-    public void setInitialPosY(double initialPosY) {
-        this.initialPosY = initialPosY;
-    }
-
-    public double getCurrentPosX() {
-        return currentPosX;
-    }
-
-    public void setCurrentPosX(double currentPosX) {
-        this.currentPosX = currentPosX;
-    }
-
-    public double getCurrentPosY() {
-        return currentPosY;
-    }
-
-    public void setCurrentPosY(double currentPosY) {
-        this.currentPosY = currentPosY;
-    }
-
-    public double getNextPosX() {
-        return nextPosX;
-    }
-
-    public void setNextPosX(double nextPosX) {
-        this.nextPosX = nextPosX;
-    }
-
-    public double getNextPosY() {
-        return nextPosY;
-    }
-
-    public void setNextPosY(double nextPosY) {
-        this.nextPosY = nextPosY;
-    }
-
-    public double getInitialVelocityX() {
-        return initialVelocityX;
-    }
-
-    public void setInitialVelocityX(double initialVelocityX) {
-        this.initialVelocityX = initialVelocityX;
-    }
-
-    public double getInitialVelocityY() {
-        return initialVelocityY;
-    }
-
-    public void setInitialVelocityY(double initialVelocityY) {
-        this.initialVelocityY = initialVelocityY;
-    }
-
-    public double getCurrentVelocityX() {
-        return currentVelocityX;
-    }
-
-    public void setCurrentVelocityX(double currentVelocityX) {
-        this.currentVelocityX = currentVelocityX;
-    }
-
-    public double getCurrentVelocityY() {
-        return currentVelocityY;
-    }
-
-    public void setCurrentVelocityY(double currentVelocityY) {
-        this.currentVelocityY = currentVelocityY;
-    }
-
-    public double getAngle() {
-        return angle;
-    }
-
-    public void setAngle(double angle) {
-        this.angle = angle;
-    }
-
-    public double getGravity() {
-        return gravity;
-    }
-
-    public void setGravity(double gravity) {
-        this.gravity = gravity;
-    }
-
-    public Line getNetVector() {
-        return netVector;
-    }
-
-    public void setNetVector(Line netVector) {
-        this.netVector = netVector;
-    }
-
-    public Line getVectorX() {
-        return vectorX;
-    }
-
-    public void setVectorX(Line vectorX) {
-        this.vectorX = vectorX;
-    }
-
-    public Line getVectorY() {
-        return vectorY;
-    }
-
-    public void setVectorY(Line vectorY) {
-        this.vectorY = vectorY;
-    }
-
-    public Canvas getCanvas() {
-        return canvas;
-    }
-
-    public void setCanvas(Canvas canvas) {
-        this.canvas = canvas;
-    }
-
-    public AnimationTimer getTimer() {
-        return timer;
-    }
-
-    public void setTimer(AnimationTimer timer) {
-        this.timer = timer;
-    }
-
-    public double getTime() {
-        return time;
-    }
-
-    public void setTime(double time) {
-        this.time = time;
-    }
-
-    public double getTimeStep() {
-        return timeStep;
-    }
-
-    public void setTimeStep(double timeStep) {
-        this.timeStep = timeStep;
-    }
-
-    public GraphicsContext getGraphicsContext() {
-        return graphicsContext;
-    }
-
-    public void setGraphicsContext(GraphicsContext graphicsContext) {
-        this.graphicsContext = graphicsContext;
-    }
-
-    public Pane getPane() {
-        return pane;
-    }
-
-    public void setPane(Pane pane) {
-        this.pane = pane;
-    }
-
-    public double getInitialVelocity() {
-        return initialVelocity;
-    }
-
-    public void setInitialVelocity(double initialVelocity) {
-        this.initialVelocity = initialVelocity;
-    }
-
-    public double getCenterX() {
-        return centerX;
-    }
-
-    public void setCenterX(double centerX) {
-        this.centerX = centerX;
-    }
-
-    public double getCenterY() {
-        return centerY;
-    }
-
-    public void setCenterY(double centerY) {
-        this.centerY = centerY;
-    }
-
-    public double getRadius() {
-        return radius;
-    }
-
-    public void setRadius(double radius) {
-        this.radius = radius;
+    /**
+     * Calculates the duration of the motion.
+     *
+     * @return the duration in seconds
+     */
+    private double motionDuration() {
+        return (-velocity * Math.sin(angle) - Math.sqrt(Math.pow(velocity * Math.sin(angle), 2) + 2 * 9.81 * height)) / (-9.81);
     }
 }
