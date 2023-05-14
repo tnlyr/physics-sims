@@ -25,12 +25,12 @@ public class ShmEngine {
 
     }
 
-    public double velocityCalc(double time) {
+    public int velocityCalc(double time) {
 
         double vel = -Math.toRadians(this.initialAngle)*this.angularFreq*Math.sin(this.angularFreq*time);
 
 
-        return vel;
+        return (int)vel;
     };
 
 

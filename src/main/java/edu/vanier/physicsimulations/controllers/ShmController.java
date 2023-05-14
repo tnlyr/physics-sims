@@ -21,6 +21,7 @@ import javafx.util.Duration;
 import java.net.URL;
 import java.util.ResourceBundle;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.DoubleToIntFunction;
 
 public class ShmController implements Initializable {
 
@@ -200,6 +201,7 @@ int dummy =0;
           totalEnergy.setText(Double.toString(Math.round(pe.getTotalEnergy())));
           System.out.println(pe.velocityCalc(timeline.getCurrentTime().toSeconds()));
           System.out.println(pe.velocityCalc(14));
+          System.out.println(pe.getAngularFreq());
 
 
 
