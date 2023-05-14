@@ -56,7 +56,13 @@ public class OpticsEngine {
         this.focalLength = focalLength;
     }
 
-
+    /**
+     * Takes into account the focal length, object distance and lens type to get the image distance
+     * @param objectDistance
+     * @param focalLength
+     * @param lensType
+     * @return
+     */
     public static double lensEquation(double objectDistance, double focalLength, String lensType) {
         if (Objects.equals(lensType, "Divergent")) {
 
@@ -73,9 +79,5 @@ public class OpticsEngine {
 
     }
 
-    public static double  heightRatio(double objectDistance, double focalLength, String lensType) {
-        double magnification = (-1*lensEquation(objectDistance, focalLength, lensType)) / getObjectDistance();
-        return magnification;
-    }
 }
 
