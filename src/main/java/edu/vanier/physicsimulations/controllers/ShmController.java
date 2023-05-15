@@ -7,15 +7,15 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Group;
-import javafx.scene.Scene;
-import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.Slider;
+import javafx.scene.control.Spinner;
+import javafx.scene.control.SpinnerValueFactory;
 import javafx.scene.layout.Pane;
-import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.*;
 import javafx.scene.text.Text;
 import javafx.scene.transform.Rotate;
-import javafx.stage.Stage;
 import javafx.util.Duration;
 
 import java.net.URL;
@@ -34,7 +34,7 @@ public class ShmController implements Initializable {
     private Spinner<Double> massSpinner;
     @FXML
     private Spinner<Double> gravitySpinner;
-    @FXML
+     @FXML
     private Button playBtn;
     @FXML
     private Button resetBtn;
@@ -52,9 +52,6 @@ public class ShmController implements Initializable {
     private Text currentVelocity;
     @FXML
     private Text timer;
-    @FXML
-    MenuItem aboutBtn;
-
 
 
     /**
@@ -135,63 +132,7 @@ public class ShmController implements Initializable {
 
             ShmEngine pe =new ShmEngine(angleSpinner.getValue(), lengthSpinner.getValue(), massSpinner.getValue(), gravitySpinner.getValue());
 
-            angleSpinner.setDisable(true);
-            lengthSpinner.setDisable(true);
-            massSpinner.setDisable(true);
-            gravitySpinner.setDisable(true);
-
-
-        }));
-
-        aboutBtn.setOnAction((event -> {
-
-            Stage newStage = new Stage();
-            newStage.setTitle("New Stage");
-            Text text = new Text("     Simple Harmonic Motion Setting\n" +
-                    "\n" +
-                    "                         - Length\n" +
-                    "\n" +
-                    "                         Allows the user to select the length distance in meters either using the up and down arrows or manually entering the number.\n" +
-                    "\n" +
-                    "\n" +
-                    "                         - Mass\n" +
-                    "\n" +
-                    "                         Allows the user to select the mass in Kg either using the up and down arrows or manually entering the number.\n" +
-                    "\n" +
-                    "                         - Angle\n" +
-                    "\n" +
-                    "                         Allows the user to select the angle of the pendulum swing in degrees by either using the up and down arrows or manually entering the number.\n" +
-                    "\n" +
-                    "\n" +
-                    "                         - Gravity\n" +
-                    "\n" +
-                    "                         Allows the user to select the gravity in Newtons by either using the up and down arrows or manually entering the number.\n" +
-
-
-                    "\n" +
-                    "\n" +
-                    "\n" +
-                    "\n" +
-                    "\n" +
-                    "                 Simulation control\n" +
-                    "\n" +
-                    "                         -Play Button\n" +
-                    "\n" +
-                    "                          The play button allows the user to start the simulation; once it is clicked, the pendulum animation (swing) starts.\n" +
-                    "\n" +
-                    "                         - Rest Button\n" +
-                    "\n" +
-                    "                         The Reset Button allows users to reset the simulation by restarting the pendulum to its initial position and allowing the user to change the parameters.\n" +
-                    "\n" +
-                    "\n" +
-                    "                         - Foot Bar\n" +
-                    "\n" +
-                    "                          The foot bar displays the simulation's current simulations timer, period, velocity, kinetic energy, potential energy, and total energy.");
-            StackPane root = new StackPane(text);
-            Scene scene = new Scene(root, 1000, 1000);
-            newStage.setScene(scene);
-            newStage.show();
-
+            
         }));
 
 
@@ -233,89 +174,92 @@ public class ShmController implements Initializable {
      @return void
      */
 
-    private void animation(double angle, Line string, Group group, Button reset) {
+      private void animation(double angle, Line string, Group group, Button reset) {
 
-        DecimalFormat decfor = new DecimalFormat("0.00");
-        //Create a new ShmEngine object for calculating the properties of the pendulum
+          DecimalFormat decfor = new DecimalFormat("0.00");
+          //Create a new ShmEngine object for calculating the properties of the pendulum
 
-        ShmEngine pe =new ShmEngine(angleSpinner.getValue(), lengthSpinner.getValue(), massSpinner.getValue(), gravitySpinner.getValue());
-
-
-        //Create a new Rotate object for animating the pendulum
-
-        Rotate rotate = new Rotate();
+          ShmEngine pe =new ShmEngine(angleSpinner.getValue(), lengthSpinner.getValue(), massSpinner.getValue(), gravitySpinner.getValue());
 
 
-        rotate.setPivotX(string.getStartX());
-        rotate.setPivotY(string.getStartY());
+          //Create a new Rotate object for animating the pendulum
 
-        group.getTransforms().add(rotate);
-
-        //Create a new Timeline object for animating the pendulum and setting its properties
+          Rotate rotate = new Rotate();
 
 
-        Timeline timeline = new Timeline();
-        timeline.setAutoReverse(true);
-        timeline.setCycleCount(Timeline.INDEFINITE);
+          rotate.setPivotX(string.getStartX());
+          rotate.setPivotY(string.getStartY());
 
-        KeyValue kv = new KeyValue(rotate.angleProperty(), angle*2, Interpolator.EASE_BOTH);
-        KeyFrame kf = new KeyFrame(Duration.seconds(pe.getPeriod()/2), kv);
+          group.getTransforms().add(rotate);
 
-
+          //Create a new Timeline object for animating the pendulum and setting its properties
 
 
-        timeline.getKeyFrames().addAll( kf);
+          Timeline timeline = new Timeline();
+          timeline.setAutoReverse(true);
+          timeline.setCycleCount(Timeline.INDEFINITE);
 
-        //Create a new EventHandler to update the properties of the pendulum as the animation progresses
+          KeyValue kv = new KeyValue(rotate.angleProperty(), angle*2, Interpolator.EASE_BOTH);
+          KeyFrame kf = new KeyFrame(Duration.seconds(pe.getPeriod()/2), kv);
 
 
 
-        reset.setOnAction((event) -> {
 
-            timeline.jumpTo(Duration.ZERO);
-            timeline.stop();
+          timeline.getKeyFrames().addAll( kf);
 
-            angleSpinner.setDisable(false);
-            lengthSpinner.setDisable(false);
-            massSpinner.setDisable(false);
-            gravitySpinner.setDisable(false);
-
-
-        });
+          //Create a new EventHandler to update the properties of the pendulum as the animation progresses
 
 
 
-        period.setText(decfor.format(pe.getPeriod()) + " s");
-        totalEnergy.setText(decfor.format(pe.getTotalEnergy()) + " J");
 
 
-        KeyFrame textUpdate = new KeyFrame(Duration.millis(150), new EventHandler<ActionEvent>() {
-            double counter = 0;
-            @Override
-            public void handle(ActionEvent event) {
-                counter +=150;
-                double timeinsec = counter/1000;
-                timer.setText(decfor.format(timeinsec) + " s");
-                pe.setVelocity(pe.velocityCalc(timeinsec));
-                currentVelocity.setText(decfor.format(pe.getVelocity()) + "m/s");
-                pe.setKineticEnergy(pe.kineticCalc(pe.getVelocity()));
-                kineticEnergy.setText(decfor.format(pe.getKineticEnergy()) + " J");
-                potentialEnergy.setText(decfor.format(pe.getTotalEnergy()-pe.getKineticEnergy()) + " J");
 
 
-            }
-
-        });
-
-        //Create a new Timeline object for updating the properties of the pendulum as the animation progresses
+          period.setText(decfor.format(pe.getPeriod()) + " s");
+          totalEnergy.setText(decfor.format(pe.getTotalEnergy()) + " J");
 
 
-        Timeline text = new Timeline();
+          KeyFrame textUpdate = new KeyFrame(Duration.millis(150), new EventHandler<ActionEvent>() {
+              double counter = 0;
+              @Override
+              public void handle(ActionEvent event) {
+                  counter +=150;
+                  double timeinsec = counter/1000;
+                  timer.setText(decfor.format(timeinsec) + " s");
+                  pe.setVelocity(pe.velocityCalc(timeinsec));
+                  currentVelocity.setText(decfor.format(pe.getVelocity()) + "m/s");
+                  pe.setKineticEnergy(pe.kineticCalc(pe.getVelocity()));
+                  kineticEnergy.setText(decfor.format(pe.getKineticEnergy()) + " J");
+                  potentialEnergy.setText(decfor.format(pe.getTotalEnergy()-pe.getKineticEnergy()) + " J");
+
+
+              }
+
+      });
+
+          //Create a new Timeline object for updating the properties of the pendulum as the animation progresses
+
+
+          Timeline text = new Timeline();
         text.getKeyFrames().add(textUpdate);
         text.setCycleCount(Timeline.INDEFINITE);
         text.play();
 
-        timeline.play();
+          timeline.play();
+
+          reset.setOnAction((event) -> {
+
+              timeline.jumpTo(Duration.ZERO);
+              timeline.stop();
+              text.stop();
+              timer.setText("0.00 s");
+              currentVelocity.setText("0.00 m/s");
+              kineticEnergy.setText("0.00 J");
+              potentialEnergy.setText("0.00 J");
+              period.setText("0.00 s");
+              totalEnergy.setText("0.00 J");
+
+          });
 
 
 
@@ -324,9 +268,7 @@ public class ShmController implements Initializable {
 
 
 
-    }
-
-    
+      }
 
 
 
