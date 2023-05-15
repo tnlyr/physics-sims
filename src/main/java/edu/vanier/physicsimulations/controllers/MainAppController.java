@@ -7,7 +7,10 @@ import edu.vanier.physicsimulations.views.ShmApp;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.TextInputDialog;
 import javafx.scene.media.AudioClip;
+
+import java.util.Optional;
 
 public class MainAppController {
     @FXML
@@ -62,17 +65,31 @@ public class MainAppController {
                     alert2.setContentText("Press OK to mute the song, or cancel to keep listening to it.");
                     alert2.showAndWait();
                     if (alert2.getResult().getText().equals("OK")) {
-                        Alert confirmation = new Alert(Alert.AlertType.INFORMATION);
-                        confirmation.setTitle("I guess you're really stubborn. Fine.");
-                        confirmation.setHeaderText("I guess you're really stubborn. Fine.");
-                        confirmation.setContentText("Fine. I'll mute the song. But I'm not happy about it.");
-                        confirmation.showAndWait();
-                        audioClip.stop();
-                        muteBtn.setText("Unmute for a masterpiece");
+                        TextInputDialog dialog = new TextInputDialog("Think carefully...");
+                        dialog.setTitle("Answer this question to mute the song: ");
+                        dialog.setHeaderText("If you get this question right, you will be able to mute the song. If not, you will keep listening to it.");
+                        dialog.setContentText("What is the best country ever?");
+                        Optional<String> result = dialog.showAndWait();
+                        result.ifPresent(name -> {
+                            if (name.equals("Algeria") || name.equals("algeria")) {
+                                Alert confirmation = new Alert(Alert.AlertType.WARNING);
+                                confirmation.setTitle("Fine.");
+                                confirmation.setHeaderText("Fine.");
+                                confirmation.setContentText("I'll mute the song. Fine.");
+                                confirmation.showAndWait();
+                            } else {
+                                Alert confirmation = new Alert(Alert.AlertType.ERROR);
+                                confirmation.setTitle("HAHA!");
+                                confirmation.setHeaderText("You got the wrong answer");
+                                confirmation.setContentText("You got the wrong answer. You will keep listening to this beautiful song.");
+                                muteBtn.setDisable(true);
+                                confirmation.showAndWait();
+                            }
+                        });
                     }
                 }
                 else {
-                    Alert confirmation = new Alert(Alert.AlertType.INFORMATION);
+                    Alert confirmation = new Alert(Alert.AlertType.CONFIRMATION);
                     confirmation.setTitle("Happy Dev!");
                     confirmation.setHeaderText("Good choice.");
                     confirmation.setContentText("I'm glad you decided to keep listening to this beautiful song.");
