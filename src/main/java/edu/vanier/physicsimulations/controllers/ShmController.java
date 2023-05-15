@@ -7,12 +7,15 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Group;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.*;
 import javafx.scene.text.Text;
 import javafx.scene.transform.Rotate;
+import javafx.stage.Stage;
 import javafx.util.Duration;
 
 import java.net.URL;
@@ -136,6 +139,53 @@ public class ShmController implements Initializable {
         }));
 
         aboutBtn.setOnAction((event -> {
+
+            Stage newStage = new Stage();
+            newStage.setTitle("New Stage");
+            Text text = new Text("     Simple Harmonic Motion Setting\n" +
+                    "\n" +
+                    "                         - Length\n" +
+                    "\n" +
+                    "                         Allows the user to select the length distance in meters either using the up and down arrows or manually entering the number.\n" +
+                    "\n" +
+                    "\n" +
+                    "                         - Mass\n" +
+                    "\n" +
+                    "                         Allows the user to select the mass in Kg either using the up and down arrows or manually entering the number.\n" +
+                    "\n" +
+                    "                         - Angle\n" +
+                    "\n" +
+                    "                         Allows the user to select the angle of the pendulum swing in degrees by either using the up and down arrows or manually entering the number.\n" +
+                    "\n" +
+                    "\n" +
+                    "                         - Gravity\n" +
+                    "\n" +
+                    "                         Allows the user to select the gravity in Newtons by either using the up and down arrows or manually entering the number.\n" +
+
+
+                    "\n" +
+                    "\n" +
+                    "\n" +
+                    "\n" +
+                    "\n" +
+                    "                 Simulation control\n" +
+                    "\n" +
+                    "                         -Play Button\n" +
+                    "\n" +
+                    "                          The play button allows the user to start the simulation; once it is clicked, the pendulum animation (swing) starts.\n" +
+                    "\n" +
+                    "                         - Rest Button\n" +
+                    "\n" +
+                    "                         The Reset Button allows users to reset the simulation by restarting the pendulum to its initial position and allowing the user to change the parameters.\n" +
+                    "\n" +
+                    "\n" +
+                    "                         - Foot Bar\n" +
+                    "\n" +
+                    "                          The foot bar displays the simulation's current simulations timer, period, velocity, kinetic energy, potential energy, and total energy.");
+            StackPane root = new StackPane(text);
+            Scene scene = new Scene(root, 1000, 1000);
+            newStage.setScene(scene);
+            newStage.show();
 
         }));
 
