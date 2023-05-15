@@ -122,9 +122,11 @@ public class ShmController implements Initializable {
 
             ShmEngine pe =new ShmEngine(angleSpinner.getValue(), lengthSpinner.getValue(), massSpinner.getValue(), gravitySpinner.getValue());
 
+
             aboutBtn.setOnAction(e -> {
                 onHelp();
             });
+
 
 
         }));
