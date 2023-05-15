@@ -54,6 +54,17 @@ public class ShmController implements Initializable {
     private Text timer;
 
 
+    /**
+
+     This class is responsible for initializing and setting up the pendulum simulation.
+     It implements the initialize method from the Initializable interface, which is used to initialize the JavaFX controller.
+     The class sets up the various spinners for length, angle, mass, and gravity.
+     It also creates the pendulum arm and bob, which are added to a group that is displayed on the screen.
+     The class contains listeners for the spinners, which update the position of the pendulum arm and bob in response to changes in the spinners' values.
+     Finally, the class contains an event listener for a button click, which starts the simulation.
+     */
+
+
 
 
 
@@ -121,13 +132,7 @@ public class ShmController implements Initializable {
 
             ShmEngine pe =new ShmEngine(angleSpinner.getValue(), lengthSpinner.getValue(), massSpinner.getValue(), gravitySpinner.getValue());
 
-            /*
-            pe.setPeriod();
-            period.setText(Double.toString(Math.round(pe.getPeriod())) + " s");
-            pe.setHeight();
-            pe.setTotalEnergy();
-            totalEnergy.setText(Double.toString(Math.round(pe.getTotalEnergy())) + " J");
-            */
+            
         }));
 
 
@@ -152,25 +157,32 @@ public class ShmController implements Initializable {
     }
 
 
-    /*
-    private void rotateLineTo(double newAngle,double oldAngle) {
-        //tl.stop();
-        Rotate rot = new Rotate();
-        rot.setPivotX(string.getStartX());
-        rot.setPivotY(string.getStartY());
-        rot.setAngle(-(newAngle-oldAngle));
 
-        string.getTransforms().add(rot);
 
-      }
+    /**
 
+     This method creates an animation of a simple pendulum and displays its properties such as period, total energy, current velocity, kinetic energy, potential energy, and time.
+
+     @param angle - the initial angle of the pendulum
+
+     @param string - the Line object representing the pendulum arm
+
+     @param group - the Group object containing the pendulum arm and bob
+
+     @param reset - the Button object for resetting the animation
+
+     @return void
      */
 
       private void animation(double angle, Line string, Group group, Button reset) {
 
           DecimalFormat decfor = new DecimalFormat("0.00");
+          //Create a new ShmEngine object for calculating the properties of the pendulum
 
           ShmEngine pe =new ShmEngine(angleSpinner.getValue(), lengthSpinner.getValue(), massSpinner.getValue(), gravitySpinner.getValue());
+
+
+          //Create a new Rotate object for animating the pendulum
 
           Rotate rotate = new Rotate();
 
@@ -179,6 +191,9 @@ public class ShmController implements Initializable {
           rotate.setPivotY(string.getStartY());
 
           group.getTransforms().add(rotate);
+
+          //Create a new Timeline object for animating the pendulum and setting its properties
+
 
           Timeline timeline = new Timeline();
           timeline.setAutoReverse(true);
@@ -192,6 +207,9 @@ public class ShmController implements Initializable {
 
           timeline.getKeyFrames().addAll( kf);
 
+          //Create a new EventHandler to update the properties of the pendulum as the animation progresses
+
+
 
           reset.setOnAction((event) -> {
 
@@ -204,9 +222,7 @@ public class ShmController implements Initializable {
 
           period.setText(decfor.format(pe.getPeriod()) + " s");
           totalEnergy.setText(decfor.format(pe.getTotalEnergy()) + " J");
-         // System.out.println(pe.velocityCalc(timeline.getCurrentTime().toSeconds()));
-          //System.out.println(pe.velocityCalc(14));
-          //System.out.println(pe.getAngularFreq());
+
 
           KeyFrame textUpdate = new KeyFrame(Duration.millis(150), new EventHandler<ActionEvent>() {
               double counter = 0;
@@ -221,12 +237,13 @@ public class ShmController implements Initializable {
                   kineticEnergy.setText(decfor.format(pe.getKineticEnergy()) + " J");
                   potentialEnergy.setText(decfor.format(pe.getTotalEnergy()-pe.getKineticEnergy()) + " J");
 
-                 // System.out.println(pe.getVelocity());
-                //  kineticEnergy.setText(Double.toString(pe.getKineticEnergy()));
-                 // potentialEnergy.setText(Double.toString(pe.getTotalEnergy()-pe.getKineticEnergy()));
+
               }
 
       });
+
+          //Create a new Timeline object for updating the properties of the pendulum as the animation progresses
+
 
           Timeline text = new Timeline();
         text.getKeyFrames().add(textUpdate);
