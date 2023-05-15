@@ -34,6 +34,19 @@ application {
     mainClassName = 'edu.vanier.physicsimulations.views.MainApp'
 }
 
+/*jar {
+    // from earlier
+    manifest {
+        attributes 'Main-Class': 'edu.vanier.physicsimulations.views.MainApp'
+    }
+
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+
+    from {
+        configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
+    }
+}*/
+
 test {
     exclude '**/*'
 }

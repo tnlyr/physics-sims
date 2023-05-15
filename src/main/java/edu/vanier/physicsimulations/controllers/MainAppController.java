@@ -77,6 +77,8 @@ public class MainAppController {
                                 confirmation.setHeaderText("Fine.");
                                 confirmation.setContentText("I'll mute the song. Fine.");
                                 confirmation.showAndWait();
+                                audioClip.stop();
+                                muteBtn.setText("Play this beautiful song");
                             } else {
                                 Alert confirmation = new Alert(Alert.AlertType.ERROR);
                                 confirmation.setTitle("HAHA!");
