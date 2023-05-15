@@ -7,15 +7,14 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Group;
-import javafx.scene.control.Button;
-import javafx.scene.control.Slider;
-import javafx.scene.control.Spinner;
-import javafx.scene.control.SpinnerValueFactory;
+import javafx.scene.Scene;
+import javafx.scene.control.*;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.*;
 import javafx.scene.text.Text;
 import javafx.scene.transform.Rotate;
+import javafx.stage.Stage;
 import javafx.util.Duration;
 
 import java.net.URL;
@@ -52,6 +51,8 @@ public class ShmController implements Initializable {
     private Text currentVelocity;
     @FXML
     private Text timer;
+    @FXML
+    private MenuItem aboutBtn;
 
 
 
@@ -121,13 +122,11 @@ public class ShmController implements Initializable {
 
             ShmEngine pe =new ShmEngine(angleSpinner.getValue(), lengthSpinner.getValue(), massSpinner.getValue(), gravitySpinner.getValue());
 
-            /*
-            pe.setPeriod();
-            period.setText(Double.toString(Math.round(pe.getPeriod())) + " s");
-            pe.setHeight();
-            pe.setTotalEnergy();
-            totalEnergy.setText(Double.toString(Math.round(pe.getTotalEnergy())) + " J");
-            */
+            aboutBtn.setOnAction(e -> {
+                onHelp();
+            });
+
+
         }));
 
 
@@ -151,20 +150,61 @@ public class ShmController implements Initializable {
 
     }
 
+    public void onHelp() {
+        Stage stage = new Stage();
+        TextArea textArea = new TextArea();
+        textArea.setWrapText(true);
+        textArea.setEditable(false);
+        textArea.setText("""
+                  
+                         
+                Simple Harmonic Motion Setting
+                         
+                         - Length
+                         
+                         Allows the user to select the length distance in meters either using the up and down arrows or manually entering the number.
+                         
+                         
+                         - Mass
+                         
+                         Allows the user to select the mass in Kg either using the up and down arrows or manually entering the number.
+                         
+                         - Angle
+                         
+                         Allows the user to select the angle of the pendulum swing in degrees by either using the up and down arrows or manually entering the number.
+                         
+                         
+                         - Gravity
+                         
+                         Allows the user to select the gravity in Newtons by either using the up and down arrows or manually entering the number.
+                         
+                         
+                         
+                         
+                         
+                 Simulation control
+                         
+                         -Play Button
+                         
+                          The play button allows the user to start the simulation; once it is clicked, the pendulum animation (swing) starts.
+                         
+                         - Rest Button
+                         
+                         The Reset Button allows users to reset the simulation by restarting the pendulum to its initial position and allowing the user to change the parameters.
+                         
+                         
+                         - Foot Bar
+                         
+                          The foot bar displays the simulation's current simulations timer, period, velocity, kinetic energy, potential energy, and total energy.
+                """);
+        Scene scene = new Scene(textArea, 800, 800);
+        stage.setTitle("Help Window");
+        stage.setScene(scene);
+        stage.show();
+    }
 
-    /*
-    private void rotateLineTo(double newAngle,double oldAngle) {
-        //tl.stop();
-        Rotate rot = new Rotate();
-        rot.setPivotX(string.getStartX());
-        rot.setPivotY(string.getStartY());
-        rot.setAngle(-(newAngle-oldAngle));
 
-        string.getTransforms().add(rot);
 
-      }
-
-     */
 
       private void animation(double angle, Line string, Group group, Button reset) {
 
