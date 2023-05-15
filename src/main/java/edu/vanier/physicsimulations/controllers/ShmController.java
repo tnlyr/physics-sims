@@ -7,10 +7,7 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Group;
-import javafx.scene.control.Button;
-import javafx.scene.control.Slider;
-import javafx.scene.control.Spinner;
-import javafx.scene.control.SpinnerValueFactory;
+import javafx.scene.control.*;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.*;
@@ -52,6 +49,9 @@ public class ShmController implements Initializable {
     private Text currentVelocity;
     @FXML
     private Text timer;
+    @FXML
+    MenuItem aboutBtn;
+
 
 
     /**
@@ -132,6 +132,10 @@ public class ShmController implements Initializable {
 
             ShmEngine pe =new ShmEngine(angleSpinner.getValue(), lengthSpinner.getValue(), massSpinner.getValue(), gravitySpinner.getValue());
 
+
+        }));
+
+        aboutBtn.setOnAction((event -> {
 
         }));
 
@@ -260,6 +264,8 @@ public class ShmController implements Initializable {
 
 
     }
+
+    
 
 
 
