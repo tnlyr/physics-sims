@@ -211,12 +211,7 @@ public class ShmController implements Initializable {
 
 
 
-          reset.setOnAction((event) -> {
 
-              timeline.jumpTo(Duration.ZERO);
-              timeline.stop();
-
-          });
 
 
 
@@ -251,6 +246,20 @@ public class ShmController implements Initializable {
         text.play();
 
           timeline.play();
+
+          reset.setOnAction((event) -> {
+
+              timeline.jumpTo(Duration.ZERO);
+              timeline.stop();
+              text.stop();
+              timer.setText("0.00 s");
+              currentVelocity.setText("0.00 m/s");
+              kineticEnergy.setText("0.00 J");
+              potentialEnergy.setText("0.00 J");
+              period.setText("0.00 s");
+              totalEnergy.setText("0.00 J");
+
+          });
 
 
 
