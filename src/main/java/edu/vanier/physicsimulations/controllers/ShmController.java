@@ -135,6 +135,11 @@ public class ShmController implements Initializable {
 
             ShmEngine pe =new ShmEngine(angleSpinner.getValue(), lengthSpinner.getValue(), massSpinner.getValue(), gravitySpinner.getValue());
 
+            angleSpinner.setDisable(true);
+            lengthSpinner.setDisable(true);
+            massSpinner.setDisable(true);
+            gravitySpinner.setDisable(true);
+
 
         }));
 
@@ -269,6 +274,12 @@ public class ShmController implements Initializable {
 
             timeline.jumpTo(Duration.ZERO);
             timeline.stop();
+
+            angleSpinner.setDisable(false);
+            lengthSpinner.setDisable(false);
+            massSpinner.setDisable(false);
+            gravitySpinner.setDisable(false);
+
 
         });
 
