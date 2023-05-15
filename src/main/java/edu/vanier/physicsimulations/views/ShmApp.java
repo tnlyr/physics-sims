@@ -22,7 +22,7 @@ public class ShmApp extends Stage {
     }
 
     public void start() throws Exception {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/SHM.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/SHM1.fxml"));
         loader.setController(new ShmController());
         VBox root = loader.load();
         this.setScene(new Scene(root));

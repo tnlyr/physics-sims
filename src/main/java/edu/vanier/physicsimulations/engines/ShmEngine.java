@@ -6,7 +6,11 @@ public class ShmEngine {
     private double initialAngle, length, mass, gravity;
     private double period, kineticEnergy, potentialEnergy, totalEnergy, velocity, acceleration;
 
-    private double height;
+    private double height, angularFreq, currentTime;
+
+
+
+
 
 
     public ShmEngine(double initialAngle, double length, double mass, double gravity) {
@@ -14,6 +18,54 @@ public class ShmEngine {
         this.length = length;
         this.mass = mass;
         this.gravity = gravity;
+        this.height = this.length - (this.length * Math.cos(Math.toRadians(this.initialAngle)));
+        this.totalEnergy = this.mass * this.gravity * this.height;
+        this.period = 2*Math.PI*Math.sqrt(this.length/this.gravity);
+        this.angularFreq = (2*Math.PI)/this.period;
+
+
+    }
+
+    public double kineticCalc(double velocity) {
+        double kin = 0.5*this.mass*Math.pow(velocity, 2);
+
+        return kin;
+
+    };
+
+
+
+
+    public double velocityCalc(double time) {
+
+        double vel = -Math.toRadians(this.initialAngle)*this.angularFreq*Math.sin(this.angularFreq*time);
+
+
+        return vel;
+    };
+
+    public double getCurrentTime() {
+        return currentTime;
+    }
+
+    public void setCurrentTime(double currentTime) {
+        this.currentTime = currentTime;
+    }
+
+    public void setPeriod(double period) {
+        this.period = period;
+    }
+
+    public void setPotentialEnergy(double potentialEnergy) {
+        this.potentialEnergy = potentialEnergy;
+    }
+
+    public double getAngularFreq() {
+        return angularFreq;
+    }
+
+    public void setAngularFreq(double angularFreq) {
+        this.angularFreq = angularFreq;
     }
 
     public double getInitialAngle() {
@@ -76,8 +128,8 @@ public class ShmEngine {
         return totalEnergy;
     }
 
-    public void setTotalEnergy() {
-        this.totalEnergy = this.mass * this.gravity * this.height;
+    public void setTotalEnergy(double totalEnergy) {
+        this.totalEnergy = totalEnergy;
     }
 
     public double getVelocity() {
@@ -100,7 +152,7 @@ public class ShmEngine {
         return height;
     }
 
-    public void setHeight() {
-        this.height = this.length - (this.length * Math.cos(this.initialAngle));
+    public void setHeight(double height) {
+        this.height  = height;
     }
 }
