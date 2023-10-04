@@ -9,7 +9,7 @@ Welcome to our Integrative Project Physics Simulation! This repository contains 
 
 ## Introduction
 
-Describe your project briefly here. Explain the motivation behind it and what makes it unique or interesting. You can also provide some context about the physics concepts your simulation covers.
+Our physics simulation project is a versatile and interactive tool designed with Java and JavaFX to explore fundamental concepts in physics, including projectile motion, optics, and pendulum dynamics. It provides a hands-on learning experience, making complex physics principles accessible and engaging.
 
 ## Features
 
