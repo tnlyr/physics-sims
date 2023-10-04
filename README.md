@@ -32,3 +32,4 @@ git clone https://github.com/tnlyr/physics-sims.git
 4. Build and run the project.
 
 ## Demo
+![Preview Projectile](https://media.discordapp.net/attachments/878034642350014476/1159157020637794336/1684093827.png?ex=651edc99&is=651d8b19&hm=921f578d700feafdacbe687f21985da3f48b7020c2ec8784be42d8c9d027236b&=&width=662&height=662)
